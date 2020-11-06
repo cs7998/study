@@ -5,12 +5,14 @@ import hello.hellospring.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 // 서비서의 네이밍 비즈니스 로직에 맞게
 // Repository 는 기술적으로 save, Service 는 join
 //@Service
+@Transactional // MemberService 클래스 전체에 해도 되고 필요한 메소드에만 해도 된다.
 public class MemberService {
 
     private final MemberRepository memberRepository; // = new MemoryMemberRepository();
@@ -23,6 +25,7 @@ public class MemberService {
 
     /**
      * 회원 가입
+     * JPA는 저장시 항상 Transaction 으로 해야 한다.
      */
     public Long join(Member member) {
         // 같은 이름 있는 중복 회원 X
