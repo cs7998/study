@@ -1,0 +1,10 @@
+의존성 주성(Dependency Injection)
+    필요한 의존성을 어떻게 받아올 것인가..
+
+@Autowired / @Inject 를 어디에 붙일까?
+    Constructor
+    Field
+    Setter
+
+과제
+    OwnerController 에 PerRepository 주입하기
