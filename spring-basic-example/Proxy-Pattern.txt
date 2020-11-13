@@ -1,0 +1,32 @@
+Proxy 예시
+@LogExecutionTime 
+실행 시간 측정 @ annnotation 만들기
+
+OwnerController 에서 사용
+
+LogExecutionTime.java
+
+@Target(ElementType.METHOD)
+@Retention(RententionPolicy.RUNTIME)
+public @interface LogExecutionTime {
+
+}
+
+@Component
+@Aspect
+public class LogAspect {
+    Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+    @Around("@annnotation(LogExecutionTime)")
+    public Object logExecutionTime(ProceedingJointPoint jointPoint) throws Throwable {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        Object proceed = jointPoint.proceed();
+
+        stopWatch.stop();
+        logger.info(stopWatch.prettyPrint());
+
+        return proceed;
+    }
+}

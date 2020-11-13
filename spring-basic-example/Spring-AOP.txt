@@ -1,0 +1,60 @@
+Aspect 
+흩어진 코드를 한 곳으로 모아
+    흩어진 코드중 일부분 변경시.. 여러곳을 다.. 변경..
+    AAAA 를 AAA 로 모두 변경..
+
+흩어진 AAAA 와 BBBB
+class A {
+    method a() {
+        AAAA
+        content a
+        BBBB
+    }
+
+    method b() {
+        AAAA
+        content b
+        BBBB
+    }
+
+}
+
+class B {
+    method c() {
+        AAAA
+        content c
+        BBBB
+    }
+}
+
+모아놓은 AAAA, BBBB
+class A {
+    method a() {
+        content a
+    }
+
+    method b() {
+        content b
+    }
+
+}
+
+class B {
+    method c() {
+        content c
+    }
+}
+
+class AAAABBBB {
+    method aaaabbbb(JointPoint point) {
+        AAAA
+        point.execute()
+        BBBB
+    }
+}
+
+다양한 AOP 구현 방법
+    컴파일 A.java  ------(AOP)-----> A.class (AspectJ https://www.eclipse.org/aspectj)
+    바이트코드 조작 A.java -> A.class -----(AOP)-----> 메모리 (AspectJ)
+    프록시 패턴 (스프링 AOP)
+        https://refactoring.guru/design-patterns/proxy

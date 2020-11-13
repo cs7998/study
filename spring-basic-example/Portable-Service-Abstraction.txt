@@ -1,0 +1,37 @@
+PSA 소개 Portable Service Abstraction
+    잘만든 인터페이스
+    나의 코드
+        확장성이 좋지 못한 코드 or 기술에 특화되어 있는 코드
+
+    나의 코드
+        잘만든 인터페이스 (PSA)
+        확장성이 좋지 못한 코드 or 기술에 특화되어 있는 코드
+
+    https://en.wikipedia.org/wiki/Service_abstraction
+
+스프링 웹 MVC
+    나의 코드 
+        @Controller | @RequestMapping
+
+        Servlet | Reactive
+
+        톰캣, 제티, 네티, 언더토우
+
+    Portable 기술 스택 변경 용이
+
+    spring 5 webflux
+
+스프링 트랜잭션 Platform Transaction Manager (All Or Nothing)
+    jdbc transaction example
+    나의 코드
+    @Transactional
+    PlatformTransactionManager
+    JpaTransactionManager | DatasourceTransactionManager | HibernateTransactionManager
+
+스프링 캐시 CacheManager
+    나의 코드
+    @Cacheable | @CacheEvict
+    CacheManager
+    JCacheManager | ConcurrenMapCacheManager | EhCacheCacheManager | ...
+
+    
