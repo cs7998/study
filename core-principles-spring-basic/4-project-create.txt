@@ -1,0 +1,19 @@
+프로젝트 생성
+    JDK 11
+    IDE : Intellij
+
+    spring initializer
+    https://start.spring.io/
+
+
+    Project
+        Project : Gradle Project
+        Language : Java
+        Spring Boot Version : 2.3.6
+
+    Project Metadata
+        groupId : hello
+        artifactId : core
+        Java : 11
+
+    Dependencies : 선택하지 않는다.     
