@@ -12,3 +12,17 @@ intellij 단축키
     System.out.println("findMember = "+findMember.getName());
     // souf > System.out.println
     // soutv > 이전 System.out.println 복사
+    // soutm print current class and method
+    // soutp print method parameter
+
+    String[] beanDefinitionNames = ac.getBeanDefinitionNames();
+    // iter + tab 반복문 자동 생성
+    for (String beanDefinitionName : beanDefinitionNames) {
+        
+    }
+
+    code select + Ctrl + D : Code 블럭 복제
+
+    Ctrl + E : 이전 작업하던 파일들 
+
+    Ctrl + Shift + Enter : @DisplayName("test") 글자 입력후 code completion
