@@ -25,6 +25,7 @@ public class ApplicationContextSameBeanFindTest {
         //MemberRepository bean = ac.getBean(MemberRepository.class);
         assertThrows(NoUniqueBeanDefinitionException.class,
                 () -> ac.getBean(MemberRepository.class));
+        // NoUniqueBeanDefinitionException 이 발생해야 테스트 성공
     }
 
     @Test
