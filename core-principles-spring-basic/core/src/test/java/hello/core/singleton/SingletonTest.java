@@ -59,13 +59,10 @@ public class SingletonTest {
     void springContainer() {
         // AppConfig appConfig = new AppConfig();
         ApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
-        // 1. 조회 : 호출할 때 마다 객체를 생성
         MemberService memberService1 = ac.getBean("memberService", MemberService.class);
-
-        // 2. 조회 : 호출할 때 마다 객체를 생성
         MemberService memberService2 = ac.getBean("memberService", MemberService.class);
 
-        // 참조값이 다른 것을 확인
+        // 참조값이 같은 것 확인
         System.out.println("memberService1 = " + memberService1);
         System.out.println("memberService2 = " + memberService2);
 
