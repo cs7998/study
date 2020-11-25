@@ -12,20 +12,21 @@ import hello.core.order.OrderServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration   // Configuraton 을 주석 처리하면 싱글톤 보장되지 않는다. CGLIB
 public class AppConfig {
 
     // @Bean memberService -> new MemoryMemberRepository()
     // @Bean orderService -> new MemoryMemberRepository()
     // singleton ??? new ???
 
+    // 예상 호출
     // call AppConfig.memberService
     // call AppConfig.memberRepository
     // call AppConfig.memberRepository
     // call AppConfig.orderService
     // call AppConfig.memberRepository
 
-
+    // 실제 호출
     // call AppConfig.memberService
     // call AppConfig.memberRepository - 예상과 다르게 한번만 호출됨 - 스프링에서 한번만 호출하도록..
     // call AppConfig.orderService
