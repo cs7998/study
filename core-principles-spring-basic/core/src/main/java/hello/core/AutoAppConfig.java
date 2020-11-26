@@ -16,11 +16,11 @@ import org.springframework.context.annotation.FilterType;
 )
 public class AutoAppConfig {
 
-    @Bean(name = "memoryMemberRepository")
-    MemberRepository memberRepository() {
-        // Overriding bean definition for bean 'memoryMemberRepository'  스프링은 수동빈이 자동빈을 교체하지만..
-        // 스프링 부트 에서는 에레메세지 발생하면서 overridding 옵션을 주도록 안내문을 에러메세지에 추가함
-        return new MemoryMemberRepository();
-    }
+//    @Bean(name = "memoryMemberRepository")
+//    MemberRepository memberRepository() {
+//        // Overriding bean definition for bean 'memoryMemberRepository'  스프링은 수동빈이 자동빈을 교체하지만..
+//        // 스프링 부트 에서는 에레메세지 발생하면서 overridding 옵션을 주도록 안내문을 에러메세지에 추가함
+//        return new MemoryMemberRepository();
+//    }
 
 }
