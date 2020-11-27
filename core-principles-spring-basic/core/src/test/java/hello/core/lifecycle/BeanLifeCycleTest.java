@@ -19,7 +19,7 @@ public class BeanLifeCycleTest {
 
     @Configuration
     static class LifeCycleConfig {
-        @Bean(initMethod = "init", destroyMethod = "close") // 설정 정보에 초기화, 종료 메서드 이름 지정, 외부 라이브러리에도 적용가능
+        @Bean// (initMethod = "init", destroyMethod = "close") // 설정 정보에 초기화, 종료 메서드 이름 지정, 외부 라이브러리에도 적용가능
         public NetworkClient networkClient() {
             NetworkClient networkClient = new NetworkClient();
             networkClient.setUrl("http://hello-spring.dev");

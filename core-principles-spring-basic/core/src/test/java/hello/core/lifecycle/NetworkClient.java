@@ -3,6 +3,9 @@ package hello.core.lifecycle;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 public class NetworkClient  { // implements InitializingBean, DisposableBean
     // implements InitializingBean, DisposableBean 스프링 전용 인터페이스에 의존, (초기화, 소멸)메소드 이름 변경 불가능
     // 내가 코드를 수정할 수 없는 외부 라이브러리에 적용 불가능 최근에는 거의 쓰지 않는다.
@@ -32,6 +35,7 @@ public class NetworkClient  { // implements InitializingBean, DisposableBean
     }
 
     // @Override afterPropertiesSet
+    @PostConstruct  // javax.... 스프링 종속 아님. JSR-250 자바 표준, 외부 라이브러리를 초기화 종료에 적용 못함
     public void init() throws Exception {
         // 의존관계 주입이 끝나면 호출됨
         System.out.println("NetworkClient.init");
@@ -40,6 +44,7 @@ public class NetworkClient  { // implements InitializingBean, DisposableBean
     }
 
     //@Override destroy
+    @PreDestroy
     public void close() throws Exception {
         System.out.println("NetworkClient.close");
         disconnect();
