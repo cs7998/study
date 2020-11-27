@@ -3,11 +3,13 @@ package hello.core.order;
 import hello.core.discount.DiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 // @Component("service") conflictingBeanDefinitionException
 @Component
+@RequiredArgsConstructor // 롬북 자바의 final 이 붙은 필드를 모아서 자바의 annotation processor 기능 으로 컴파일 시점에 생성자 자동 생성
 public class OrderServiceImpl implements OrderService {
 
     private final MemberRepository memberRepository; // = new MemoryMemberRepository();
@@ -15,11 +17,13 @@ public class OrderServiceImpl implements OrderService {
     //private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
     private final DiscountPolicy discountPolicy;
 
-    @Autowired
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-        this.memberRepository = memberRepository;
-        this.discountPolicy = discountPolicy;
-    }
+    // Ctrl + F12 클래스의 메소드 목록 팝업
+    // @RequiredArgsConstructor 이 생성자를 자동 생성하므로 중복 코드가 된다.
+//    @Autowired
+//    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+//        this.memberRepository = memberRepository;
+//        this.discountPolicy = discountPolicy;
+//    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
