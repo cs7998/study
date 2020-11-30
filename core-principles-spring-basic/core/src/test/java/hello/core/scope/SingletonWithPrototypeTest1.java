@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Scope;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import javax.inject.Provider;
+//import org.springframework.beans.factory.ObjectProvider;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class SingletonWithPrototypeTest1 {
@@ -37,20 +40,26 @@ public class SingletonWithPrototypeTest1 {
 
         ClientBean clientBean2 = ac.getBean(ClientBean.class);
         int count2 = clientBean2.logic();
-        assertThat(count2).isEqualTo(2);
+        assertThat(count2).isEqualTo(1);
         // clientBean1, clientBean2 가 PrototypeBean 공유하기 원하지 않는 의도라면..
     }
 
     @Scope("singleton")
     static class ClientBean {
-        private final PrototypeBean prototypeBean;  // 생성시점에 주입
+        //private final PrototypeBean prototypeBean;  // 생성시점에 주입
 
         @Autowired
-        public ClientBean(PrototypeBean prototypeBean) {
-            this.prototypeBean = prototypeBean;
-        }
+        private Provider<PrototypeBean> prototypeBeanProvider;
+        //private ObjectProvider<PrototypeBean> prototypeBeanProvider;
+
+        //@Autowired
+        //public ClientBean(PrototypeBean prototypeBean) {
+        //    this.prototypeBean = prototypeBean;
+        //}
 
         public int logic() {
+            PrototypeBean prototypeBean = prototypeBeanProvider.get();
+            //PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
             prototypeBean.addCount();
             int count = prototypeBean.getCount(); // Ctrl + Alt + N 아래 return 과 합쳐 한줄로 만들어 준다.
             return count;
