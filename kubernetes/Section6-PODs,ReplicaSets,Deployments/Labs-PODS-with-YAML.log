@@ -1,0 +1,124 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get pods
+No resources found in default namespace.
+controlplane $ kubectl run nginx --image=nginx
+pod/nginx created
+controlplane $ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+newpods-2kddc   1/1     Running   0          13s
+newpods-xjpv2   1/1     Running   0          13s
+newpods-xlgwc   1/1     Running   0          13s
+nginx           1/1     Running   0          21s
+controlplane $ kubectl get pods -o wide
+NAME            READY   STATUS    RESTARTS   AGE   IP           NODE     NOMINATED NODE   READINESS GATES
+newpods-2kddc   1/1     Running   0          57s   10.244.1.4   node01   <none>           <none>
+newpods-xjpv2   1/1     Running   0          57s   10.244.1.5   node01   <none>           <none>
+newpods-xlgwc   1/1     Running   0          57s   10.244.1.3   node01   <none>           <none>
+nginx           1/1     Running   0          65s   10.244.1.2   node01   <none>           <none>
+controlplane $ kubectl describe pod newpod-
+Error from server (NotFound): pods "newpod-" not found
+controlplane $ kubectl get pods -o wide
+NAME            READY   STATUS    RESTARTS   AGE     IP           NODE     NOMINATED NODE   READINESS GATES
+newpods-2kddc   1/1     Running   0          2m8s    10.244.1.4   node01   <none>           <none>
+newpods-xjpv2   1/1     Running   0          2m8s    10.244.1.5   node01   <none>           <none>
+newpods-xlgwc   1/1     Running   0          2m8s    10.244.1.3   node01   <none>           <none>
+nginx           1/1     Running   0          2m16s   10.244.1.2   node01   <none>           <none>
+controlplane $ kubectl describe pod newpod-2kddc
+Error from server (NotFound): pods "newpod-2kddc" not found
+controlplane $ kubectl describe describe pod newpod-2kddc
+error: the server doesn't have a resource type "describe"
+controlplane $ kubectl describe pod newpod-2kddc
+Error from server (NotFound): pods "newpod-2kddc" not found
+controlplane $ kubectl get pods -o wide
+NAME            READY   STATUS    RESTARTS   AGE     IP           NODE     NOMINATED NODE   READINESS GATES
+newpods-2kddc   1/1     Running   0          3m54s   10.244.1.4   node01   <none>           <none>
+newpods-xjpv2   1/1     Running   0          3m54s   10.244.1.5   node01   <none>           <none>
+newpods-xlgwc   1/1     Running   0          3m54s   10.244.1.3   node01   <none>           <none>
+nginx           1/1     Running   0          4m2s    10.244.1.2   node01   <none>           <none>
+controlplane $ kubectl describe pod webapp
+Name:         webapp
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.46
+Start Time:   Tue, 08 Dec 2020 13:32:20 +0000
+Labels:       <none>
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.6
+IPs:
+  IP:  10.244.1.6
+Containers:
+  nginx:
+    Container ID:   docker://6d0693872f964c496a078ba8dcea987c82f920a0f3795949cab9b539854deabb
+    Image:          nginx
+    Image ID:       docker-pullable://nginx@sha256:6b1daa9462046581ac15be20277a7c75476283f969cb3a61c8725ec38d3b01c3
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Tue, 08 Dec 2020 13:32:22 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-ql42c (ro)
+  agentx:
+    Container ID:
+    Image:          agentx
+    Image ID:
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-ql42c (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-ql42c:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-ql42c
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age               From               Message
+  ----     ------     ----              ----               -------
+  Normal   Scheduled  26s               default-scheduler  Successfully assigned default/webapp to node01
+  Normal   Pulling    25s               kubelet, node01    Pulling image "nginx"
+  Normal   Pulled     25s               kubelet, node01    Successfully pulled image "nginx" in 637.729024ms
+  Normal   Created    25s               kubelet, node01    Created container nginx
+  Normal   Started    24s               kubelet, node01    Started container nginx
+  Normal   BackOff    22s               kubelet, node01    Back-off pulling image "agentx"
+  Warning  Failed     22s               kubelet, node01    Error: ImagePullBackOff
+  Normal   Pulling    7s (x2 over 24s)  kubelet, node01    Pulling image "agentx"
+  Warning  Failed     6s (x2 over 23s)  kubelet, node01    Failed to pull image "agentx": rpc error: code = Unknown desc = Error response from daemon: pull access denied for agentx, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     6s (x2 over 23s)  kubelet, node01    Error: ErrImagePull
+controlplane $ kubectl get pods
+NAME            READY   STATUS             RESTARTS   AGE
+newpods-2kddc   1/1     Running            0          9m40s
+newpods-xjpv2   1/1     Running            0          9m40s
+newpods-xlgwc   1/1     Running            0          9m40s
+nginx           1/1     Running            0          9m48s
+webapp          1/2     ImagePullBackOff   0          4m58s
+controlplane $ kubectl delete pod webapp
+pod "webapp" deleted
+controlplane $ kubectl run redis --image=redis123
+pod/redis created
+controlplane $ kuectl edit pod redis
+bash: kuectl: command not found
+controlplane $ kubectl edit pod redis
+pod/redis edited
+controlplane $ kubectl apply
+error: must specify one of -f and -k
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
