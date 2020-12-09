@@ -1,0 +1,577 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get pods
+No resources found in default namespace.
+controlplane $ kubectl get replicaset
+No resources found in default namespace.
+controlplane $ kubectl get replicaset
+NAME              DESIRED   CURRENT   READY   AGE
+new-replica-set   4         4         0       17s
+controlplane $ kubectl get replicaset
+NAME              DESIRED   CURRENT   READY   AGE
+new-replica-set   4         4         0       32s
+controlplane $ kubectl describe replicaset
+Name:         new-replica-set
+Namespace:    default
+Selector:     name=busybox-pod
+Labels:       <none>
+Annotations:  <none>
+Replicas:     4 current / 4 desired
+Pods Status:  0 Running / 4 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  name=busybox-pod
+  Containers:
+   busybox-container:
+    Image:      busybox777
+    Port:       <none>
+    Host Port:  <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Events:
+  Type    Reason            Age   From                   Message
+  ----    ------            ----  ----                   -------
+  Normal  SuccessfulCreate  57s   replicaset-controller  Created pod: new-replica-set-gs9pv
+  Normal  SuccessfulCreate  57s   replicaset-controller  Created pod: new-replica-set-mkjtv
+  Normal  SuccessfulCreate  57s   replicaset-controller  Created pod: new-replica-set-c2w86
+  Normal  SuccessfulCreate  57s   replicaset-controller  Created pod: new-replica-set-kp8qr
+controlplane $ kubectl get replicaset
+NAME              DESIRED   CURRENT   READY   AGE
+new-replica-set   4         4         0       82s
+controlplane $ kubectl describe pods
+Name:         new-replica-set-c2w86
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.35
+Start Time:   Wed, 09 Dec 2020 04:12:51 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.3
+IPs:
+  IP:           10.244.1.3
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-b2lt5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-b2lt5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-b2lt5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                 From               Message
+  ----     ------     ----                ----               -------
+  Normal   Scheduled  108s                default-scheduler  Successfully assigned default/new-replica-set-c2w86 to node01
+  Normal   BackOff    28s (x5 over 104s)  kubelet, node01    Back-off pulling image "busybox777"
+  Warning  Failed     28s (x5 over 104s)  kubelet, node01    Error: ImagePullBackOff
+  Normal   Pulling    15s (x4 over 106s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     13s (x4 over 104s)  kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     13s (x4 over 104s)  kubelet, node01    Error: ErrImagePull
+
+
+Name:         new-replica-set-gs9pv
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.35
+Start Time:   Wed, 09 Dec 2020 04:12:51 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.5
+IPs:
+  IP:           10.244.1.5
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-b2lt5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-b2lt5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-b2lt5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                 From               Message
+  ----     ------     ----                ----               -------
+  Normal   Scheduled  108s                default-scheduler  Successfully assigned default/new-replica-set-gs9pv to node01
+  Normal   BackOff    26s (x5 over 102s)  kubelet, node01    Back-off pulling image "busybox777"
+  Warning  Failed     26s (x5 over 102s)  kubelet, node01    Error: ImagePullBackOff
+  Normal   Pulling    12s (x4 over 106s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     10s (x4 over 102s)  kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     10s (x4 over 102s)  kubelet, node01    Error: ErrImagePull
+
+
+Name:         new-replica-set-kp8qr
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.35
+Start Time:   Wed, 09 Dec 2020 04:12:51 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.2
+IPs:
+  IP:           10.244.1.2
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ErrImagePull
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-b2lt5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-b2lt5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-b2lt5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                 From               Message
+  ----     ------     ----                ----               -------
+  Normal   Scheduled  108s                default-scheduler  Successfully assigned default/new-replica-set-kp8qr to node01
+  Normal   BackOff    28s (x6 over 105s)  kubelet, node01    Back-off pulling image "busybox777"
+  Normal   Pulling    16s (x4 over 106s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     14s (x4 over 105s)  kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     14s (x4 over 105s)  kubelet, node01    Error: ErrImagePull
+  Warning  Failed     1s (x7 over 105s)   kubelet, node01    Error: ImagePullBackOff
+
+
+Name:         new-replica-set-mkjtv
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.35
+Start Time:   Wed, 09 Dec 2020 04:12:51 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.4
+IPs:
+  IP:           10.244.1.4
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-b2lt5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-b2lt5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-b2lt5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                 From               Message
+  ----     ------     ----                ----               -------
+  Normal   Scheduled  108s                default-scheduler  Successfully assigned default/new-replica-set-mkjtv to node01
+  Normal   BackOff    24s (x5 over 103s)  kubelet, node01    Back-off pulling image "busybox777"
+  Warning  Failed     24s (x5 over 103s)  kubelet, node01    Error: ImagePullBackOff
+  Normal   Pulling    12s (x4 over 106s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     9s (x4 over 103s)   kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     9s (x4 over 103s)   kubelet, node01    Error: ErrImagePull
+controlplane $ kubectl delete pod
+error: resource(s) were provided, but no name, label selector, or --all flag specified
+controlplane $ kubectl describe pods
+Name:         new-replica-set-c2w86
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.35
+Start Time:   Wed, 09 Dec 2020 04:12:51 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.3
+IPs:
+  IP:           10.244.1.3
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-b2lt5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-b2lt5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-b2lt5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  2m25s                default-scheduler  Successfully assigned default/new-replica-set-c2w86 to node01
+  Normal   Pulling    52s (x4 over 2m23s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     50s (x4 over 2m21s)  kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     50s (x4 over 2m21s)  kubelet, node01    Error: ErrImagePull
+  Normal   BackOff    37s (x6 over 2m21s)  kubelet, node01    Back-off pulling image "busybox777"
+  Warning  Failed     23s (x7 over 2m21s)  kubelet, node01    Error: ImagePullBackOff
+
+
+Name:         new-replica-set-gs9pv
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.35
+Start Time:   Wed, 09 Dec 2020 04:12:51 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.5
+IPs:
+  IP:           10.244.1.5
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-b2lt5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-b2lt5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-b2lt5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  2m25s                default-scheduler  Successfully assigned default/new-replica-set-gs9pv to node01
+  Normal   Pulling    49s (x4 over 2m23s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     47s (x4 over 2m19s)  kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     47s (x4 over 2m19s)  kubelet, node01    Error: ErrImagePull
+  Warning  Failed     33s (x6 over 2m19s)  kubelet, node01    Error: ImagePullBackOff
+  Normal   BackOff    20s (x7 over 2m19s)  kubelet, node01    Back-off pulling image "busybox777"
+
+
+Name:         new-replica-set-kp8qr
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.35
+Start Time:   Wed, 09 Dec 2020 04:12:51 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.2
+IPs:
+  IP:           10.244.1.2
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-b2lt5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-b2lt5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-b2lt5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  2m25s                default-scheduler  Successfully assigned default/new-replica-set-kp8qr to node01
+  Normal   BackOff    65s (x6 over 2m22s)  kubelet, node01    Back-off pulling image "busybox777"
+  Normal   Pulling    53s (x4 over 2m23s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     51s (x4 over 2m22s)  kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     51s (x4 over 2m22s)  kubelet, node01    Error: ErrImagePull
+  Warning  Failed     38s (x7 over 2m22s)  kubelet, node01    Error: ImagePullBackOff
+
+
+Name:         new-replica-set-mkjtv
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.35
+Start Time:   Wed, 09 Dec 2020 04:12:51 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.4
+IPs:
+  IP:           10.244.1.4
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-b2lt5 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-b2lt5:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-b2lt5
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  2m25s                default-scheduler  Successfully assigned default/new-replica-set-mkjtv to node01
+  Normal   Pulling    49s (x4 over 2m23s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     46s (x4 over 2m20s)  kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     46s (x4 over 2m20s)  kubelet, node01    Error: ErrImagePull
+  Warning  Failed     35s (x6 over 2m20s)  kubelet, node01    Error: ImagePullBackOff
+  Normal   BackOff    24s (x7 over 2m20s)  kubelet, node01    Back-off pulling image "busybox777"
+controlplane $ kubectl get replicaset
+NAME              DESIRED   CURRENT   READY   AGE
+new-replica-set   4         4         0       2m36s
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-c2w86   0/1     ImagePullBackOff   0          3m10s
+new-replica-set-gs9pv   0/1     ImagePullBackOff   0          3m10s
+new-replica-set-kp8qr   0/1     ImagePullBackOff   0          3m10s
+new-replica-set-mkjtv   0/1     ImagePullBackOff   0          3m10s
+controlplane $ kubectl delete new-relica-set-c2w86
+error: the server doesn't have a resource type "new-relica-set-c2w86"
+controlplane $ kubectl delete pod new-relica-set-c2w86
+Error from server (NotFound): pods "new-relica-set-c2w86" not found
+controlplane $ kubectl delete pod new-replica-set-c2w86
+pod "new-replica-set-c2w86" deleted
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-gs9pv   0/1     ImagePullBackOff   0          4m37s
+new-replica-set-kp8qr   0/1     ImagePullBackOff   0          4m37s
+new-replica-set-mkjtv   0/1     ImagePullBackOff   0          4m37s
+new-replica-set-pn2v4   0/1     ErrImagePull       0          16s
+controlplane $ kubectl explain replicaset|grep VERSION
+VERSION:  apps/v1
+controlplane $ vi replicaset-definition-1.yaml
+controlplane $ vi replicaset-definition-1.yaml
+controlplane $ vi replicaset-definition-2.yaml
+controlplane $ kubectl run replicaset-definition-2.yaml
+Error: required flag(s) "image" not set
+controlplane $ kubectl apply -f replicaset-definition-2.yaml
+replicaset.apps/replicaset-2 created
+controlplane $ kubectl get relicasets.apps
+error: the server doesn't have a resource type "relicasets"
+controlplane $ kubectl get replicasets.apps
+NAME              DESIRED   CURRENT   READY   AGE
+new-replica-set   4         4         0       13m
+replicaset-2      2         2         2       2m1s
+controlplane $ kubecel delete replicasets.apps replicaset-2
+bash: kubecel: command not found
+controlplane $ kubectl delete replicasets.apps replicaset-2
+replicaset.apps "replicaset-2" deleted
+controlplane $ kubectl edit replicaset new-replica-set
+replicaset.apps/new-replica-set edited
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-gs9pv   0/1     ImagePullBackOff   0          23m
+new-replica-set-kp8qr   0/1     ImagePullBackOff   0          23m
+new-replica-set-mkjtv   0/1     ImagePullBackOff   0          23m
+new-replica-set-pn2v4   0/1     ImagePullBackOff   0          19m
+controlplane $ kubectl delete pod new-replica-set-gs9pv
+pod "new-replica-set-gs9pv" deleted
+controlplane $ kubectl delete pod new-replica-set-kp8qr
+pod "new-replica-set-kp8qr" deleted
+^[[Acontrolplane $ kubectl delete pod new-replica-set-mkjtv
+pod "new-replica-set-mkjtv" deleted
+controlplane $ kubectl delete pod new-replica-set-pn2v4
+pod "new-replica-set-pn2v4" deleted
+controlplane $ kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+new-replica-set-5bhwb   1/1     Running   0          28s
+new-replica-set-hklff   1/1     Running   0          38s
+new-replica-set-jt6sf   1/1     Running   0          56s
+new-replica-set-qjxkx   1/1     Running   0          47s
+controlplane $ kubectl scale replicaset --replicas=5 new-replica-set
+replicaset.apps/new-replica-set scaled
+controlplane $ kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+new-replica-set-5bhwb   1/1     Running   0          111s
+new-replica-set-cxvgh   1/1     Running   0          8s
+new-replica-set-hklff   1/1     Running   0          2m1s
+new-replica-set-jt6sf   1/1     Running   0          2m19s
+new-replica-set-qjxkx   1/1     Running   0          2m10s
+controlplane $ kubectl scale replicaset --replicas-2 new-replica-set
+Error: unknown flag: --replicas-2
+See 'kubectl scale --help' for usage.
+controlplane $ kubectl scale replicaset --replicas=2 new-replica-set
+replicaset.apps/new-replica-set scaled
+controlplane $ kubectl get pods
+NAME                    READY   STATUS        RESTARTS   AGE
+new-replica-set-5bhwb   1/1     Terminating   0          3m8s
+new-replica-set-cxvgh   1/1     Terminating   0          85s
+new-replica-set-hklff   1/1     Terminating   0          3m18s
+new-replica-set-jt6sf   1/1     Running       0          3m36s
+new-replica-set-qjxkx   1/1     Running       0          3m27s
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
