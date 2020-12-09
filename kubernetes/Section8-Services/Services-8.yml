@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: image-processing
+  service: frontend
+  labels:
+    app: myapp
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    tier: backend
