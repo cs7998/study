@@ -1,0 +1,234 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get pods
+No resources found in default namespace.
+controlplane $ kubectl get pods -n default
+No resources found in default namespace.
+controlplane $ kubectl get replicaset
+No resources found in default namespace.
+controlplane $ kubectl get replicaset
+NAME              DESIRED   CURRENT   READY   AGE
+new-replica-set   4         4         0       4s
+controlplane $ kubectl describe replicaset net-replica-set
+Error from server (NotFound): replicasets.apps "net-replica-set" not found
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-7prcp   0/1     ImagePullBackOff   0          50s
+new-replica-set-j4lgv   0/1     ErrImagePull       0          50s
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          50s
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          50s
+controlplane $ kubectl describe pod new-replica-set-7prcp
+Name:         new-replica-set-7prcp
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.17
+Start Time:   Sun, 10 Jan 2021 08:02:22 +0000
+Labels:       name=busybox-pod
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.5
+IPs:
+  IP:           10.244.1.5
+Controlled By:  ReplicaSet/new-replica-set
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox777
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-qcwhh (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-qcwhh:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-qcwhh
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  91s                default-scheduler  Successfully assigned default/new-replica-set-7prcp to node01
+  Normal   Pulling    43s (x3 over 89s)  kubelet, node01    Pulling image "busybox777"
+  Warning  Failed     41s (x3 over 83s)  kubelet, node01    Failed to pull image "busybox777": rpc error: code = Unknown desc = Error response from daemon: pull access denied for busybox777, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     41s (x3 over 83s)  kubelet, node01    Error: ErrImagePull
+  Normal   BackOff    14s (x4 over 82s)  kubelet, node01    Back-off pulling image "busybox777"
+  Warning  Failed     14s (x4 over 82s)  kubelet, node01    Error: ImagePullBackOff
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-7prcp   0/1     ImagePullBackOff   0          107s
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          107s
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          107s
+new-replica-set-tjx9t   0/1     ErrImagePull       0          107s
+controlplane $ kubectl delete pod new-replica-set-7prcp
+pod "new-replica-set-7prcp" deleted
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-7lvw4   0/1     ErrImagePull       0          10s
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          2m45s
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          2m45s
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          2m45s
+controlplane $ ls
+CKA  go  replicaset-definition-1.yaml  replicaset-definition-2.yaml
+controlplane $ ls -l
+total 16
+drwxr-xr-x 2 root root 4096 Jan 10 07:56 CKA
+drwxr-xr-x 4 root root 4096 Nov 10 11:58 go
+-rw-r--r-- 1 root root  264 Jan 10 07:56 replicaset-definition-1.yaml
+-rw-r--r-- 1 root root  266 Jan 10 07:56 replicaset-definition-2.yaml
+controlplane $ vi replicaset-definition-1.yaml
+controlplane $ kubectl replicaset-definition-1.yaml
+Error: unknown command "replicaset-definition-1.yaml" for "kubectl"
+Run 'kubectl --help' for usage.
+controlplane $ kubectl apply -f replicaset-definition-1.yaml
+error: unable to recognize "replicaset-definition-1.yaml": no matches for kind "ReplicaSet" in version "v1"
+controlplane $ vi replicaset-definition-1.yaml
+controlplane $ kubectl apply -f replicaset-definition-1.yaml
+replicaset.apps/replicaset-1 created
+controlplane $ kubectl explain replicaset | grep VERSION
+VERSION:  apps/v1
+controlplane $ vi replicaset-definition-2.yaml
+controlplane $ kubectl apply -f replicaset-definition-2.yaml
+The ReplicaSet "replicaset-2" is invalid: spec.template.metadata.labels: Invalid value: map[string]string{"tier":"nginx"}: `selector` does not match template `labels`
+controlplane $ vi replicaset-definition-2.yaml
+controlplane $ kubectl apply -f replicaset-definition-2.yaml
+replicaset.apps/replicaset-2 created
+controlplane $ kubectl delete replicaset replicaset-1 replicaset-2
+replicaset.apps "replicaset-1" deleted
+replicaset.apps "replicaset-2" deleted
+controlplane $ kubectl describe net-replica-set
+error: the server doesn't have a resource type "net-replica-set"
+controlplane $ kubectl describe replicaset net-replica-set
+Error from server (NotFound): replicasets.apps "net-replica-set" not found
+controlplane $ kubectl describe replicaset new-replica-set
+Name:         new-replica-set
+Namespace:    default
+Selector:     name=busybox-pod
+Labels:       <none>
+Annotations:  <none>
+Replicas:     4 current / 4 desired
+Pods Status:  0 Running / 4 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  name=busybox-pod
+  Containers:
+   busybox-container:
+    Image:      busybox777
+    Port:       <none>
+    Host Port:  <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Events:
+  Type    Reason            Age    From                   Message
+  ----    ------            ----   ----                   -------
+  Normal  SuccessfulCreate  8m46s  replicaset-controller  Created pod: new-replica-set-j4lgv
+  Normal  SuccessfulCreate  8m46s  replicaset-controller  Created pod: new-replica-set-stt9h
+  Normal  SuccessfulCreate  8m46s  replicaset-controller  Created pod: new-replica-set-tjx9t
+  Normal  SuccessfulCreate  8m46s  replicaset-controller  Created pod: new-replica-set-7prcp
+  Normal  SuccessfulCreate  6m11s  replicaset-controller  Created pod: new-replica-set-7lvw4
+controlplane $ kubectl scale --current-replicas=5 --replicas=4 new-replica-set
+error: the server doesn't have a resource type "new-replica-set"
+controlplane $ kubectl scale --current-replicas=5 --replicas=4 replicasets.apps/new-replica-set
+error: Expected replicas to be 5, was 4
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-7lvw4   0/1     ImagePullBackOff   0          9m33s
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          12m
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          12m
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          12m
+controlplane $ kubectl edit replicaset new-replica-set
+replicaset.apps/new-replica-set edited
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-7lvw4   0/1     ImagePullBackOff   0          11m
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          13m
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          13m
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          13m
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-7lvw4   0/1     ImagePullBackOff   0          11m
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          13m
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          13m
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          13m
+controlplane $ kubectl edit replicaset new-replica-set
+Edit cancelled, no changes made.
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-7lvw4   0/1     ImagePullBackOff   0          11m
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          14m
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          14m
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          14m
+controlplane $ kubectl edit replicaset new-replica-set
+Edit cancelled, no changes made.
+controlplane $ kubectl get replicaset
+NAME              DESIRED   CURRENT   READY   AGE
+new-replica-set   4         4         0       16m
+controlplane $ kubectl edit replicaset new-replica-set
+replicaset.apps/new-replica-set edited
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-6d8xr   1/1     Running            0          4s
+new-replica-set-7lvw4   0/1     ImagePullBackOff   0          15m
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          17m
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          17m
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          17m
+controlplane $ kubectl edit replicaset new-replica-set
+replicaset.apps/new-replica-set edited
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-6d8xr   1/1     Running            0          27s
+new-replica-set-7lvw4   0/1     ImagePullBackOff   0          15m
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          18m
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          18m
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          18m
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-6d8xr   1/1     Running            0          30s
+new-replica-set-7lvw4   0/1     ImagePullBackOff   0          15m
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          18m
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          18m
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          18m
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-6d8xr   1/1     Running            0          32s
+new-replica-set-7lvw4   0/1     ImagePullBackOff   0          15m
+new-replica-set-j4lgv   0/1     ImagePullBackOff   0          18m
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          18m
+new-replica-set-tjx9t   0/1     ImagePullBackOff   0          18m
+controlplane $ kubectl edit replicasets.apps new-replica-set
+replicaset.apps/new-replica-set edited
+controlplane $ kubectl get pods
+NAME                    READY   STATUS             RESTARTS   AGE
+new-replica-set-6d8xr   1/1     Running            0          49s
+new-replica-set-7lvw4   0/1     Terminating        0          15m
+new-replica-set-j4lgv   0/1     Terminating        0          18m 
+new-replica-set-stt9h   0/1     ImagePullBackOff   0          18m
+new-replica-set-tjx9t   0/1     Terminating        0          18m
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.
