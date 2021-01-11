@@ -1,0 +1,81 @@
+controlplane $
+controlplane $
+controlplane $ kubectl run nginx-pod --image=nginx:alpine
+pod/nginx-pod created
+controlplane $ kubectl run redis --image=redis:alpine -l tier=db
+pod/redis created
+controlplane $ kubectl describe pod redisName:         redis
+Namespace:    default
+Priority:     0Node:         node01/172.17.0.22
+Start Time:   Mon, 11 Jan 2021 06:26:00 +0000Labels:       tier=db
+Annotations:  <none>
+Status:       Pending
+IP:
+IPs:          <none>
+Containers:
+  redis:
+    Container ID:
+    Image:          redis:alpine
+    Image ID:
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-8q6rr (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-8q6rr:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-8q6rr
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  9s    default-scheduler  Successfully assigned default/redis to node01
+  Normal  Pulling    6s    kubelet, node01    Pulling image "redis:alpine"
+controlplane $ kubectl create service clusterip redis --tcp=6379:6379 --dry-run=client -o yaml 4-> svc.yaml
+error: exactly one NAME is required, got 2
+See 'kubectl create service clusterip -h' for help and examples
+controlplane $ kubectl create service clusterip redis --tcp=6379:6379 --dry-run=client -o yaml > 4-svc.yaml
+controlplane $ vi 4-svc.yaml
+controlplane $ kubectl apply -f 4-svc.yaml
+service/redis created
+controlplane $ kubectl delete svc redis
+service "redis" deleted
+controlplane $ kubectl expose pod redis --port=6379 --name=redis-service
+service/redis-service exposed
+controlplane $ kubectl create deploy webapp --image=kodekloud/webapp-color --replicas=3
+deployment.apps/webapp created
+controlplane $ kubectl run custom-nginx --image=nginx --port=8080
+pod/custom-nginx created
+controlplane $ kubectl create ns dev-ns
+namespace/dev-ns created
+controlplane $ kubectl create deploy redis-deploy --image=redis -n dev-ns
+deployment.apps/redis-deploy created
+controlplane $ kubectl edit deployment.apps/redis-deploy -n devns
+Error from server (NotFound): namespaces "devns" not found
+controlplane $ kubectl edit deployment.apps/redis-deploy -n dev-ns
+deployment.apps/redis-deploy edited
+controlplane $ kubectl run httpd --image=httpd:alpine
+pod/httpd created
+controlplane $ kubectl expose pod httpd --port=80 --name=httpd
+service/httpd exposed
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

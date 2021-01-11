@@ -1,0 +1,129 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get ns
+NAME              STATUS   AGE
+default           Active   88s
+dev               Active   20s
+finance           Active   20s
+kube-node-lease   Active   89s
+kube-public       Active   89s
+kube-system       Active   89s
+manufacturing     Active   20s
+marketing         Active   20s
+prod              Active   20s
+research          Active   19s
+controlplane $ kubectl get ns | wc -l
+11
+controlplane $ kubectl get pod -n=research
+NAME    READY   STATUS             RESTARTS   AGE
+dna-1   0/1     CrashLoopBackOff   3          94s
+dna-2   0/1     CrashLoopBackOff   3          94s
+controlplane $ kubectl create pod redis --image=redis --namespace=finance
+Error: unknown flag: --image
+See 'kubectl create --help' for usage.
+controlplane $ kubectl create pods redis --image=redis --namespace=finance
+Error: unknown flag: --image
+See 'kubectl create --help' for usage.
+controlplane $ kubectl run redis --image=redis --namespace=finance
+pod/redis created
+controlplane $ kubectl get pods --all-namespaces
+NAMESPACE       NAME                                   READY   STATUS             RESTARTS   AGE
+dev             mysql-db                               1/1     Running            0          3m51s
+finance         payroll                                1/1     Running            0          3m51s
+finance         redis                                  1/1     Running            0          33s
+kube-system     coredns-f9fd979d6-5glcb                1/1     Running            0          4m41s
+kube-system     coredns-f9fd979d6-qlhjm                1/1     Running            0          4m41s
+kube-system     etcd-controlplane                      1/1     Running            0          4m50s
+kube-system     kube-apiserver-controlplane            1/1     Running            0          4m50s
+kube-system     kube-controller-manager-controlplane   1/1     Running            0          4m51s
+kube-system     kube-flannel-ds-amd64-2n8pl            1/1     Running            0          4m41s
+kube-system     kube-flannel-ds-amd64-2wq6f            1/1     Running            1          4m28s
+kube-system     kube-proxy-s8xlf                       1/1     Running            0          4m28s
+kube-system     kube-proxy-wt5fz                       1/1     Running            0          4m41s
+kube-system     kube-scheduler-controlplane            1/1     Running            0          4m51s
+manufacturing   red-app                                1/1     Running            0          3m51s
+marketing       blue                                   1/1     Running            0          3m51s
+marketing       mysql-db                               1/1     Running            0          3m51s
+research        dna-1                                  0/1     CrashLoopBackOff   5          3m51s
+research        dna-2                                  0/1     CrashLoopBackOff   5          3m51s
+controlplane $ kubectl get pods --all-namespaces | grep blue
+marketing       blue                                   1/1     Running            0          4m2s
+controlplane $ kubectl describe pod blue -n marketing
+Name:         blue
+Namespace:    marketing
+Priority:     0
+Node:         node01/172.17.0.18
+Start Time:   Mon, 11 Jan 2021 00:57:21 +0000
+Labels:       name=blue
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.7
+IPs:
+  IP:  10.244.1.7
+Containers:
+  internal:
+    Container ID:   docker://1b0aeddc73f92fd922cbc9575ee4b704b96b5f8e9cec1920a77fcde87a24186d
+    Image:          kodekloud/webapp-conntest
+    Image ID:       docker-pullable://kodekloud/webapp-conntest@sha256:b87d6b99f127ef10274e4447b3a151127688369b82eab09eba6ab6a84e6c5689
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Mon, 11 Jan 2021 00:57:48 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      APP_NAME:  Blue - Marketing Application
+      BG_COLOR:  blue
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-zqbxb (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-zqbxb:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-zqbxb
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason                  Age    From               Message
+  ----     ------                  ----   ----               -------
+  Normal   Scheduled               5m18s  default-scheduler  Successfully assigned marketing/blue to node01
+  Warning  FailedCreatePodSandBox  5m16s  kubelet, node01    Failed to create pod sandbox: rpc error: code = Unknown desc = failed to set up sandbox container "14b3cd15a1496110a8ec30d9858e6bea70ed5bb93f721ad85456cae89f410b39"network for pod "blue": networkPlugin cni failed to set up pod "blue_marketing" network: open /run/flannel/subnet.env: no such file or directory
+  Normal   SandboxChanged          5m16s  kubelet, node01    Pod sandbox changed, it will be killed and re-created.
+  Normal   Pulling                 5m11s  kubelet, node01    Pulling image "kodekloud/webapp-conntest"
+  Normal   Pulled                  4m51s  kubelet, node01    Successfully pulled image "kodekloud/webapp-conntest" in 19.860488909s
+  Normal   Created                 4m51s  kubelet, node01    Created container internal
+  Normal   Started                 4m51s  kubelet, node01    Started container internal
+controlplane $ curl 172.17.0.18:8080
+curl: (7) Failed to connect to 172.17.0.18 port 8080: Connection refused
+controlplane $ ping 172.17.0.18:8080
+ping: 172.17.0.18:8080: Name or service not known
+controlplane $ ping 172.17.0.18
+PING 172.17.0.18 (172.17.0.18) 56(84) bytes of data.
+64 bytes from 172.17.0.18: icmp_seq=1 ttl=64 time=0.352 ms
+64 bytes from 172.17.0.18: icmp_seq=2 ttl=64 time=0.378 ms
+64 bytes from 172.17.0.18: icmp_seq=3 ttl=64 time=0.374 ms
+64 bytes from 172.17.0.18: icmp_seq=4 ttl=64 time=0.486 ms
+64 bytes from 172.17.0.18: icmp_seq=5 ttl=64 time=0.501 ms
+64 bytes from 172.17.0.18: icmp_seq=6 ttl=64 time=0.619 ms
+64 bytes from 172.17.0.18: icmp_seq=7 ttl=64 time=0.533 ms
+64 bytes from 172.17.0.18: icmp_seq=8 ttl=64 time=0.443 ms
+64 bytes from 172.17.0.18: icmp_seq=9 ttl=64 time=0.541 ms
+64 bytes from 172.17.0.18: icmp_seq=10 ttl=64 time=0.411 ms
+^C
+--- 172.17.0.18 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9208ms
+rtt min/avg/max/mdev = 0.352/0.463/0.619/0.086 ms
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

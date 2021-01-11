@@ -1,0 +1,134 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get pods
+No resources found in default namespace.
+controlplane $ kubectl get rsNo resources found in default namespace.
+controlplane $ kubectl get deploy
+No resources found in default namespace.controlplane $ kubectl get deploy
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGEfrontend-deployment   0/4     4            0           5s
+controlplane $ kubectl get rs
+NAME                             DESIRED   CURRENT   READY   AGE
+frontend-deployment-56d8ff5458   4         4         0       15s
+controlplane $ kubectl get po
+NAME                                   READY   STATUS             RESTARTS   AGE
+frontend-deployment-56d8ff5458-7wjhk   0/1     ImagePullBackOff   0          26s
+frontend-deployment-56d8ff5458-kdqvp   0/1     ImagePullBackOff   0          26s
+frontend-deployment-56d8ff5458-lh579   0/1     ImagePullBackOff   0          26s
+frontend-deployment-56d8ff5458-mbbqk   0/1     ImagePullBackOff   0          26s
+controlplane $ kubectl get po
+NAME                                   READY   STATUS             RESTARTS   AGE
+frontend-deployment-56d8ff5458-7wjhk   0/1     ErrImagePull       0          78s
+frontend-deployment-56d8ff5458-kdqvp   0/1     ErrImagePull       0          78s
+frontend-deployment-56d8ff5458-lh579   0/1     ImagePullBackOff   0          78s
+frontend-deployment-56d8ff5458-mbbqk   0/1     ErrImagePull       0          78s
+controlplane $ kubectl describe deploy frontend-deployment
+Name:                   frontend-deployment
+Namespace:              default
+CreationTimestamp:      Mon, 11 Jan 2021 00:26:16 +0000
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               name=busybox-pod
+Replicas:               4 desired | 4 updated | 4 total | 0 available | 4 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  name=busybox-pod
+  Containers:
+   busybox-container:
+    Image:      busybox888
+    Port:       <none>
+    Host Port:  <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    Environment:  <none>
+    Mounts:       <none>  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      False   MinimumReplicasUnavailable
+  Progressing    True    ReplicaSetUpdated
+OldReplicaSets:  <none>
+NewReplicaSet:   frontend-deployment-56d8ff5458 (4/4 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  115s  deployment-controller  Scaled up replica set frontend-deployment-56d8ff5458 to 4
+controlplane $ kubectl describe pod frontend-deployment-56d8ff5458-7wjhk
+Name:         frontend-deployment-56d8ff5458-7wjhk
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.26
+Start Time:   Mon, 11 Jan 2021 00:26:16 +0000
+Labels:       name=busybox-pod
+              pod-template-hash=56d8ff5458
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.5
+IPs:
+  IP:           10.244.1.5
+Controlled By:  ReplicaSet/frontend-deployment-56d8ff5458
+Containers:
+  busybox-container:
+    Container ID:
+    Image:         busybox888
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo Hello Kubernetes! && sleep 3600
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-p7sgd (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-p7sgd:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-p7sgd
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  3m18s                default-scheduler  Successfully assigned default/frontend-deployment-56d8ff5458-7wjhk to node01
+  Normal   Pulling    55s (x4 over 3m16s)  kubelet, node01    Pulling image "busybox888"
+  Warning  Failed     53s (x4 over 3m10s)  kubelet, node01    Failed to pull image "busybox888": rpc error: code= Unknown desc = Error response from daemon: pull access denied for busybox888, repository does not exist or mayrequire 'docker login': denied: requested access to the resource is denied
+  Warning  Failed     53s (x4 over 3m10s)  kubelet, node01    Error: ErrImagePull
+  Normal   BackOff    39s (x6 over 3m9s)   kubelet, node01    Back-off pulling image "busybox888"
+  Warning  Failed     28s (x7 over 3m9s)   kubelet, node01    Error: ImagePullBackOff
+controlplane $ kubectl apply -f deployment-definition-1.yaml
+Error from server (BadRequest): error when creating "deployment-definition-1.yaml": deployment in version "v1" cannot be handled as a Deployment: no kind "deployment" is registered for version "apps/v1" in scheme "k8s.io/kubernetes/pkg/api/legacyscheme/scheme.go:30"
+controlplane $ vi deployment-definition-1.yaml
+controlplane $ vi deployment-definition-1.yaml
+controlplane $ kubectl apply -f deployment-definition-1.yaml
+error: unable to recognize "deployment-definition-1.yaml": no matches for kind "deployment" in version "v1"
+controlplane $ vi deployment-definition-1.yaml
+kind: deployment 를 Deployment 로 변경
+
+controlplane $ kubectl apply -f deployment-definition-1.yaml
+deployment.apps/deployment-1 created
+controlplane $ kubectl create deploy --dry-run=client -o yaml > 11.yaml
+Error: required flag(s) "image" not set
+controlplane $ kubectl create deploy httpd-frontend --image=httpd:2.4-alpine  --replicas=3deployment.apps/httpd-frontend created
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.
