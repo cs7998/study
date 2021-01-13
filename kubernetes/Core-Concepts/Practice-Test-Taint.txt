@@ -1,0 +1,612 @@
+kubectl explain pod --recursive | less
+
+kubectl explain pod --recursive | grep -A5 tolerations
+
+
+controlplane $
+controlplane $
+controlplane $ kubectl get nodes
+NAME           STATUS   ROLES    AGE     VERSION
+controlplane   Ready    master   7m55s   v1.19.0
+node01         Ready    <none>   7m23s   v1.19.0
+controlplane $ kubectl describe node node01
+Name:               node01
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=node01
+                    kubernetes.io/os=linux
+Annotations:        flannel.alpha.coreos.com/backend-data: null
+                    flannel.alpha.coreos.com/backend-type: host-gw
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 172.17.0.26
+                    kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Wed, 13 Jan 2021 07:05:56 +0000
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  node01
+  AcquireTime:     <unset>
+  RenewTime:       Wed, 13 Jan 2021 07:13:47 +0000
+Conditions:
+  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----                 ------  -----------------                 ------------------                ------                       -------
+  NetworkUnavailable   False   Wed, 13 Jan 2021 07:06:07 +0000   Wed, 13 Jan 2021 07:06:07 +0000   FlannelIsUp                  Flannel is running on this node
+  MemoryPressure       False   Wed, 13 Jan 2021 07:11:28 +0000   Wed, 13 Jan 2021 07:05:56 +0000   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Wed, 13 Jan 2021 07:11:28 +0000   Wed, 13 Jan 2021 07:05:56 +0000   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Wed, 13 Jan 2021 07:11:28 +0000   Wed, 13 Jan 2021 07:05:56 +0000   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready                True    Wed, 13 Jan 2021 07:11:28 +0000   Wed, 13 Jan 2021 07:06:17 +0000   KubeletReady                 kubelet is posting ready status. AppArmor enabled
+Addresses:
+  InternalIP:  172.17.0.26
+  Hostname:    node01
+Capacity:
+  cpu:                2
+  ephemeral-storage:  199545168Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             4039104Ki
+  pods:               110
+Allocatable:
+  cpu:                2
+  ephemeral-storage:  183900826525
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             3936704Ki
+  pods:               110
+System Info:
+  Machine ID:                 ff59e86028a232ee78d326f15ffe9b9f
+  System UUID:                ff59e86028a232ee78d326f15ffe9b9f
+  Boot ID:                    3c67308d-b25f-4109-9845-dc7265ce3a20
+  Kernel Version:             4.15.0-122-generic
+  OS Image:                   Ubuntu 18.04.5 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://19.3.13
+  Kubelet Version:            v1.19.0
+  Kube-Proxy Version:         v1.19.0
+PodCIDR:                      10.244.1.0/24
+PodCIDRs:                     10.244.1.0/24
+Non-terminated Pods:          (2 in total)
+  Namespace                   Name                           CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                   ----                           ------------  ----------  ---------------  -------------  ---
+  kube-system                 kube-flannel-ds-amd64-lgjsb    100m (5%)     100m (5%)   50Mi (1%)        50Mi (1%)      7m52s
+  kube-system                 kube-proxy-drp8k               0 (0%)        0 (0%)      0 (0%)           0 (0%)         7m52s
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests   Limits
+  --------           --------   ------
+  cpu                100m (5%)  100m (5%)
+  memory             50Mi (1%)  50Mi (1%)
+  ephemeral-storage  0 (0%)     0 (0%)
+  hugepages-1Gi      0 (0%)     0 (0%)
+  hugepages-2Mi      0 (0%)     0 (0%)
+Events:
+  Type    Reason                   Age                    From                Message
+  ----    ------                   ----                   ----                -------
+  Normal  Starting                 7m52s                  kubelet, node01     Starting kubelet.
+  Normal  NodeHasSufficientMemory  7m52s (x2 over 7m52s)  kubelet, node01     Node node01 status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    7m52s (x2 over 7m52s)  kubelet, node01     Node node01 status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     7m52s (x2 over 7m52s)  kubelet, node01     Node node01 status is now: NodeHasSufficientPID
+  Normal  NodeAllocatableEnforced  7m52s                  kubelet, node01     Updated Node Allocatable limit across pods
+  Normal  Starting                 7m48s                  kube-proxy, node01  Starting kube-proxy.
+  Normal  NodeReady                7m31s                  kubelet, node01     Node node01 status is now: NodeReady
+controlplane $ kubectl describe node node01 | grep taint
+controlplane $ kubectl describe node node01 | grep Taint
+Taints:             <none>
+controlplane $ kubectl taint nodes node01 spray=mortein:NoSchedule
+node/node01 tainted
+controlplane $ kubectl run mosquito --image:nginx
+Error: unknown flag: --image:nginx
+See 'kubectl run --help' for usage.
+controlplane $ kubectl run --help
+Create and run a particular image in a pod.
+
+Examples:
+  # Start a nginx pod.
+  kubectl run nginx --image=nginx
+
+  # Start a hazelcast pod and let the container expose port 5701.
+  kubectl run hazelcast --image=hazelcast/hazelcast --port=5701
+
+  # Start a hazelcast pod and set environment variables "DNS_DOMAIN=cluster" and "POD_NAMESPACE=default" in the
+container.
+  kubectl run hazelcast --image=hazelcast/hazelcast --env="DNS_DOMAIN=cluster" --env="POD_NAMESPACE=default"
+
+  # Start a hazelcast pod and set labels "app=hazelcast" and "env=prod" in the container.
+  kubectl run hazelcast --image=hazelcast/hazelcast --labels="app=hazelcast,env=prod"
+
+  # Dry run. Print the corresponding API objects without creating them.
+  kubectl run nginx --image=nginx --dry-run=client
+
+  # Start a nginx pod, but overload the spec with a partial set of values parsed from JSON.
+  kubectl run nginx --image=nginx --overrides='{ "apiVersion": "v1", "spec": { ... } }'
+
+  # Start a busybox pod and keep it in the foreground, don't restart it if it exits.
+  kubectl run -i -t busybox --image=busybox --restart=Never
+
+  # Start the nginx pod using the default command, but use custom arguments (arg1 .. argN) for that command.
+  kubectl run nginx --image=nginx -- <arg1> <arg2> ... <argN>
+
+  # Start the nginx pod using a different command and custom arguments.
+  kubectl run nginx --image=nginx --command -- <cmd> <arg1> ... <argN>
+
+Options:
+      --allow-missing-template-keys=true: If true, ignore any errors in templates when a field or map key is missing in
+the template. Only applies to golang and jsonpath output formats.
+      --attach=false: If true, wait for the Pod to start running, and then attach to the Pod as if 'kubectl attach ...'
+were called.  Default false, unless '-i/--stdin' is set, in which case the default is true. With '--restart=Never' the
+exit code of the container process is returned.
+      --cascade=true: If true, cascade the deletion of the resources managed by this resource (e.g. Pods created by a
+ReplicationController).  Default true.
+      --command=false: If true and extra arguments are present, use them as the 'command' field in the container, rather
+than the 'args' field which is the default.
+      --dry-run='none': Must be "none", "server", or "client". If client strategy, only print the object that would be
+sent, without sending it. If server strategy, submit server-side request without persisting the resource.
+      --env=[]: Environment variables to set in the container.
+      --expose=false: If true, service is created for the container(s) which are run
+      --field-manager='kubectl-run': Name of the manager used to track field ownership.
+  -f, --filename=[]: to use to replace the resource.
+      --force=false: If true, immediately remove resources from API and bypass graceful deletion. Note that immediate
+deletion of some resources may result in inconsistency or data loss and requires confirmation.
+      --grace-period=-1: Period of time in seconds given to the resource to terminate gracefully. Ignored if negative.
+Set to 1 for immediate shutdown. Can only be set to 0 when --force is true (force deletion).
+      --hostport=-1: The host port mapping for the container port. To demonstrate a single-machine container.
+      --image='': The image for the container to run.
+      --image-pull-policy='': The image pull policy for the container. If left empty, this value will not be specified
+by the client and defaulted by the server
+  -k, --kustomize='': Process a kustomization directory. This flag can't be used together with -f or -R.
+  -l, --labels='': Comma separated labels to apply to the pod(s). Will override previous values.
+      --leave-stdin-open=false: If the pod is started in interactive mode or with stdin, leave stdin open after the
+first attach completes. By default, stdin will be closed after the first attach completes.
+      --limits='': The resource requirement limits for this container.  For example, 'cpu=200m,memory=512Mi'.  Note that
+server side components may assign limits depending on the server configuration, such as limit ranges.
+  -o, --output='': Output format. One of:
+json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file.
+      --overrides='': An inline JSON override for the generated object. If this is non-empty, it is used to override the
+generated object. Requires that the object supply a valid apiVersion field.
+      --pod-running-timeout=1m0s: The length of time (like 5s, 2m, or 3h, higher than zero) to wait until at least one
+pod is running
+      --port='': The port that this container exposes.
+      --privileged=false: If true, run the container in privileged mode.
+      --quiet=false: If true, suppress prompt messages.
+      --record=false: Record current kubectl command in the resource annotation. If set to false, do not record the
+command. If set to true, record the command. If not set, default to updating the existing annotation value only if one
+already exists.
+  -R, --recursive=false: Process the directory used in -f, --filename recursively. Useful when you want to manage
+related manifests organized within the same directory.
+      --requests='': The resource requirement requests for this container.  For example, 'cpu=100m,memory=256Mi'.  Note
+that server side components may assign requests depending on the server configuration, such as limit ranges.
+      --restart='Always': The restart policy for this Pod.  Legal values [Always, OnFailure, Never].
+      --rm=false: If true, delete resources created in this command for attached containers.
+      --save-config=false: If true, the configuration of current object will be saved in its annotation. Otherwise, the
+annotation will be unchanged. This flag is useful when you want to perform kubectl apply on this object in the future.
+      --serviceaccount='': Service account to set in the pod spec.
+  -i, --stdin=false: Keep stdin open on the container(s) in the pod, even if nothing is attached.
+      --template='': Template string or path to template file to use when -o=go-template, -o=go-template-file. The
+template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
+      --timeout=0s: The length of time to wait before giving up on a delete, zero means determine a timeout from the
+size of the object
+  -t, --tty=false: Allocated a TTY for each container in the pod.
+      --wait=false: If true, wait for resources to be gone before returning. This waits for finalizers.
+
+Usage:
+  kubectl run NAME --image=image [--env="key=value"] [--port=port] [--dry-run=server|client] [--overrides=inline-json]
+[--command] -- [COMMAND] [args...] [options]
+
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+controlplane $ kubectl run mosquito --image=nginx
+pod/mosquito created
+controlplane $ kubectl describe pod mosquito
+Name:         mosquito
+Namespace:    default
+Priority:     0
+Node:         <none>
+Labels:       run=mosquito
+Annotations:  <none>
+Status:       Pending
+IP:
+IPs:          <none>
+Containers:
+  mosquito:
+    Image:        nginx
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-28wnh (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False
+Volumes:
+  default-token-28wnh:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-28wnh
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age                From               Message
+  ----     ------            ----               ----               -------
+  Warning  FailedScheduling  21s (x2 over 21s)  default-scheduler  0/2 nodes are available: 1 node(s) had taint {node-role.kubernetes.io/master: }, that the pod didn't tolerate, 1 node(s) had taint {spray: mortein}, that the pod didn't tolerate.
+controlplane $ kubectl run mosquito --image=nginx --dry-run=client -o yaml > 7.yaml
+controlplane $ vi 7.yaml
+controlplane $ kubectl apply -f 7.yaml
+error: error parsing 7.yaml: error converting YAML to JSON: yaml: line 12: found a tab character that violates indentation
+controlplane $ vi 7.yaml
+controlplane $ kubectl apply -f 7.yaml
+pod/bee created
+controlplane $ kubectl describe pod bee
+Name:         bee
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.26
+Start Time:   Wed, 13 Jan 2021 07:24:58 +0000
+Labels:       run=bee
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.2
+IPs:
+  IP:  10.244.1.2
+Containers:
+  bee:
+    Container ID:   docker://1c95b72bc19811c77e6b103dd5c62d9e8723712c22759caf7aac6dfeba52c4a6
+    Image:          nginx
+    Image ID:       docker-pullable://nginx@sha256:10b8cc432d56da8b61b070f4c7d2543a9ed17c2b23010b43af434fd40e2ca4aa
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Wed, 13 Jan 2021 07:25:04 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-28wnh (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-28wnh:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-28wnh
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+                 spray=mortein:NoSchedule
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  14s   default-scheduler  Successfully assigned default/bee to node01
+  Normal  Pulling    13s   kubelet, node01    Pulling image "nginx"
+  Normal  Pulled     9s    kubelet, node01    Successfully pulled image "nginx" in 4.56607273s
+  Normal  Created    8s    kubelet, node01    Created container bee
+  Normal  Started    8s    kubelet, node01    Started container bee
+controlplane $ cat 7.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: bee
+  name: bee
+spec:
+  containers:
+  - image: nginx
+    name: bee
+  tolerations:
+  - key: "spray"
+    operator: "Equal"
+    value: "mortein"
+    effect: "NoSchedule"
+controlplane $ kubectl get nodes --show
+Error: unknown flag: --show
+See 'kubectl get --help' for usage.
+controlplane $ kubectl get nodes --show-taint
+Error: unknown flag: --show-taint
+See 'kubectl get --help' for usage.
+controlplane $ kubectl get --help | grep taint
+controlplane $ kubectl get --help | grepTaint
+grepTaint: command not found
+controlplane $ kubectl get --help | grep Taint
+controlplane $ kubectl describe node master/controlplane
+error: there is no need to specify a resource type as a separate argument when passing arguments in resource/name form (e.g. 'kubectl get resource/<resource_name>' instead of 'kubectl get resource resource/<resource_name>'
+controlplane $ kubectl describe node master
+Error from server (NotFound): nodes "master" not found
+controlplane $ kubectl describe node/master
+Error from server (NotFound): nodes "master" not found
+controlplane $ kubectl get nodes
+NAME           STATUS   ROLES    AGE   VERSION
+controlplane   Ready    master   22m   v1.19.0
+node01         Ready    <none>   21m   v1.19.0
+controlplane $ kubectl describe node controlplane
+Name:               controlplane
+Roles:              master
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=controlplane
+                    kubernetes.io/os=linux
+                    node-role.kubernetes.io/master=
+Annotations:        flannel.alpha.coreos.com/backend-data: null
+                    flannel.alpha.coreos.com/backend-type: host-gw
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 172.17.0.23
+                    kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Wed, 13 Jan 2021 07:05:24 +0000
+Taints:             node-role.kubernetes.io/master:NoSchedule
+Unschedulable:      false
+Lease:
+  HolderIdentity:  controlplane
+  AcquireTime:     <unset>
+  RenewTime:       Wed, 13 Jan 2021 07:27:55 +0000
+Conditions:
+  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----                 ------  -----------------                 ------------------                ------                       -------
+  NetworkUnavailable   False   Wed, 13 Jan 2021 07:05:52 +0000   Wed, 13 Jan 2021 07:05:52 +0000   FlannelIsUp                  Flannel is running on this node
+  MemoryPressure       False   Wed, 13 Jan 2021 07:26:08 +0000   Wed, 13 Jan 2021 07:05:20 +0000   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Wed, 13 Jan 2021 07:26:08 +0000   Wed, 13 Jan 2021 07:05:20 +0000   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Wed, 13 Jan 2021 07:26:08 +0000   Wed, 13 Jan 2021 07:05:20 +0000   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready                True    Wed, 13 Jan 2021 07:26:08 +0000   Wed, 13 Jan 2021 07:06:04 +0000   KubeletReady                 kubelet is posting ready status. AppArmor enabled
+Addresses:
+  InternalIP:  172.17.0.23
+  Hostname:    controlplane
+Capacity:
+  cpu:                2
+  ephemeral-storage:  199545168Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             2040680Ki
+  pods:               110
+Allocatable:
+  cpu:                2
+  ephemeral-storage:  183900826525
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             1938280Ki
+  pods:               110
+System Info:
+  Machine ID:                 722d562544b3bd0db6c3ec175faa80a0
+  System UUID:                722d562544b3bd0db6c3ec175faa80a0
+  Boot ID:                    5937c47f-29e8-4da6-84a2-34191b563129
+  Kernel Version:             4.15.0-122-generic
+  OS Image:                   Ubuntu 18.04.5 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://19.3.13
+  Kubelet Version:            v1.19.0
+  Kube-Proxy Version:         v1.19.0
+PodCIDR:                      10.244.0.0/24
+PodCIDRs:                     10.244.0.0/24
+Non-terminated Pods:          (8 in total)
+  Namespace                   Name                                    CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                   ----                                    ------------  ----------  ---------------  -------------  ---
+  kube-system                 coredns-f9fd979d6-pbw7v                 100m (5%)     0 (0%)      70Mi (3%)        170Mi (8%)     22m
+  kube-system                 coredns-f9fd979d6-wrfvd                 100m (5%)     0 (0%)      70Mi (3%)        170Mi (8%)     22m
+  kube-system                 etcd-controlplane                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         22m
+  kube-system                 kube-apiserver-controlplane             250m (12%)    0 (0%)      0 (0%)           0 (0%)         22m
+  kube-system                 kube-controller-manager-controlplane    200m (10%)    0 (0%)      0 (0%)           0 (0%)         22m
+  kube-system                 kube-flannel-ds-amd64-swgxv             100m (5%)     100m (5%)   50Mi (2%)        50Mi (2%)      22m
+  kube-system                 kube-proxy-49xnq                        0 (0%)        0 (0%)      0 (0%)           0 (0%)         22m
+  kube-system                 kube-scheduler-controlplane             100m (5%)     0 (0%)      0 (0%)           0 (0%)         22m
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests     Limits
+  --------           --------     ------
+  cpu                850m (42%)   100m (5%)
+  memory             190Mi (10%)  390Mi (20%)
+  ephemeral-storage  0 (0%)       0 (0%)
+  hugepages-1Gi      0 (0%)       0 (0%)
+  hugepages-2Mi      0 (0%)       0 (0%)
+Events:
+  Type    Reason                   Age                From                      Message
+  ----    ------                   ----               ----                      -------
+  Normal  NodeHasSufficientMemory  22m (x4 over 22m)  kubelet, controlplane     Node controlplane status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    22m (x3 over 22m)  kubelet, controlplane     Node controlplane status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     22m (x4 over 22m)  kubelet, controlplane     Node controlplane status is now: NodeHasSufficientPID
+  Normal  NodeAllocatableEnforced  22m                kubelet, controlplane     Updated Node Allocatable limit across pods
+  Normal  Starting                 22m                kubelet, controlplane     Starting kubelet.
+  Normal  NodeHasSufficientMemory  22m                kubelet, controlplane     Node controlplane status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    22m                kubelet, controlplane     Node controlplane status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     22m                kubelet, controlplane     Node controlplane status is now: NodeHasSufficientPID
+  Normal  NodeAllocatableEnforced  22m                kubelet, controlplane     Updated Node Allocatable limit across pods
+  Normal  Starting                 22m                kube-proxy, controlplane  Starting kube-proxy.
+  Normal  NodeReady                21m                kubelet, controlplane     Node controlplane status is now: NodeReady
+controlplane $
+controlplane $ history | grep taint
+   11  kubectl describe node node01 | grep taint
+   13  kubectl taint nodes node01 spray=mortein:NoSchedule
+   26  kubectl get nodes --show-taint
+   27  kubectl get --help | grep taint
+   35  history | grep taint
+controlplane $ kubectl taint nodes node01 spray=mortein:NoSchedule-
+node/node01 untainted
+controlplane $ kubectl taint nodes controlplane spray=mortein:NoSchedule-
+error: taint "spray:NoSchedule" not found
+controlplane $ kubectl taint nodes master/controlplane spray=mortein:NoSchedule-
+error: the server doesn't have a resource type "master"
+controlplane $ kubectl get nodes
+NAME           STATUS   ROLES    AGE   VERSION
+controlplane   Ready    master   25m   v1.19.0
+node01         Ready    <none>   24m   v1.19.0
+controlplane $ kubectl taint nodes controlplane spray=mortein:NoSchedule-
+error: taint "spray:NoSchedule" not found
+controlplane $ kubectl describe node controlplane
+Name:               controlplane
+Roles:              master
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=controlplane
+                    kubernetes.io/os=linux
+                    node-role.kubernetes.io/master=
+Annotations:        flannel.alpha.coreos.com/backend-data: null
+                    flannel.alpha.coreos.com/backend-type: host-gw
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 172.17.0.23
+                    kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Wed, 13 Jan 2021 07:05:24 +0000
+Taints:             node-role.kubernetes.io/master:NoSchedule
+Unschedulable:      false
+Lease:
+  HolderIdentity:  controlplane
+  AcquireTime:     <unset>
+  RenewTime:       Wed, 13 Jan 2021 07:31:25 +0000
+Conditions:
+  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----                 ------  -----------------                 ------------------                ------                       -------
+  NetworkUnavailable   False   Wed, 13 Jan 2021 07:05:52 +0000   Wed, 13 Jan 2021 07:05:52 +0000   FlannelIsUp                  Flannel is running on this node
+  MemoryPressure       False   Wed, 13 Jan 2021 07:31:09 +0000   Wed, 13 Jan 2021 07:05:20 +0000   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Wed, 13 Jan 2021 07:31:09 +0000   Wed, 13 Jan 2021 07:05:20 +0000   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Wed, 13 Jan 2021 07:31:09 +0000   Wed, 13 Jan 2021 07:05:20 +0000   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready                True    Wed, 13 Jan 2021 07:31:09 +0000   Wed, 13 Jan 2021 07:06:04 +0000   KubeletReady                 kubelet is posting ready status. AppArmor enabled
+Addresses:
+  InternalIP:  172.17.0.23
+  Hostname:    controlplane
+Capacity:
+  cpu:                2
+  ephemeral-storage:  199545168Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             2040680Ki
+  pods:               110
+Allocatable:
+  cpu:                2
+  ephemeral-storage:  183900826525
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             1938280Ki
+  pods:               110
+System Info:
+  Machine ID:                 722d562544b3bd0db6c3ec175faa80a0
+  System UUID:                722d562544b3bd0db6c3ec175faa80a0
+  Boot ID:                    5937c47f-29e8-4da6-84a2-34191b563129
+  Kernel Version:             4.15.0-122-generic
+  OS Image:                   Ubuntu 18.04.5 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://19.3.13
+  Kubelet Version:            v1.19.0
+  Kube-Proxy Version:         v1.19.0
+PodCIDR:                      10.244.0.0/24
+PodCIDRs:                     10.244.0.0/24
+Non-terminated Pods:          (8 in total)
+  Namespace                   Name                                    CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                   ----                                    ------------  ----------  ---------------  -------------  ---
+  kube-system                 coredns-f9fd979d6-pbw7v                 100m (5%)     0 (0%)      70Mi (3%)        170Mi (8%)     25m
+  kube-system                 coredns-f9fd979d6-wrfvd                 100m (5%)     0 (0%)      70Mi (3%)        170Mi (8%)     25m
+  kube-system                 etcd-controlplane                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         25m
+  kube-system                 kube-apiserver-controlplane             250m (12%)    0 (0%)      0 (0%)           0 (0%)         25m
+  kube-system                 kube-controller-manager-controlplane    200m (10%)    0 (0%)      0 (0%)           0 (0%)         25m
+  kube-system                 kube-flannel-ds-amd64-swgxv             100m (5%)     100m (5%)   50Mi (2%)        50Mi (2%)      25m
+  kube-system                 kube-proxy-49xnq                        0 (0%)        0 (0%)      0 (0%)           0 (0%)         25m
+  kube-system                 kube-scheduler-controlplane             100m (5%)     0 (0%)      0 (0%)           0 (0%)         25m
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests     Limits
+  --------           --------     ------
+  cpu                850m (42%)   100m (5%)
+  memory             190Mi (10%)  390Mi (20%)
+  ephemeral-storage  0 (0%)       0 (0%)
+  hugepages-1Gi      0 (0%)       0 (0%)
+  hugepages-2Mi      0 (0%)       0 (0%)
+Events:
+  Type    Reason                   Age                From                      Message
+  ----    ------                   ----               ----                      -------
+  Normal  NodeHasSufficientMemory  26m (x4 over 26m)  kubelet, controlplane     Node controlplane status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    26m (x3 over 26m)  kubelet, controlplane     Node controlplane status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     26m (x4 over 26m)  kubelet, controlplane     Node controlplane status is now: NodeHasSufficientPID
+  Normal  NodeAllocatableEnforced  26m                kubelet, controlplane     Updated Node Allocatable limit across pods
+  Normal  Starting                 25m                kubelet, controlplane     Starting kubelet.
+  Normal  NodeHasSufficientMemory  25m                kubelet, controlplane     Node controlplane status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    25m                kubelet, controlplane     Node controlplane status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     25m                kubelet, controlplane     Node controlplane status is now: NodeHasSufficientPID
+  Normal  NodeAllocatableEnforced  25m                kubelet, controlplane     Updated Node Allocatable limit across pods
+  Normal  Starting                 25m                kube-proxy, controlplane  Starting kube-proxy.
+  Normal  NodeReady                25m                kubelet, controlplane     Node controlplane status is now: NodeReady
+controlplane $ kubectl describe node controlplane | grep Taint
+Taints:             node-role.kubernetes.io/master:NoSchedule
+controlplane $ kubectl taint nodes controlplane node-role.kubernetes.io/master:NoSchedule
+error: node controlplane already has node-role.kubernetes.io/master taint(s) with same effect(s) and --overwrite is false
+controlplane $ kubectl taint nodes controlplane node-role.kubernetes.io/master:NoSchedule-
+node/controlplane untainted
+controlplane $ kubectl taint nodes master/controlplane node-role.kubernetes.io/master:NoSchedule-
+error: the server doesn't have a resource type "master"
+controlplane $ kubectl taint nodes master/controlplane node-role.kubernetes.io/master:NoSchedule-
+error: the server doesn't have a resource type "master"
+controlplane $ kubectl taint nodes controlplane node-role.kubernetes.io/master:NoSchedule-
+error: taint "node-role.kubernetes.io/master:NoSchedule" not found
+controlplane $ kubectl describe node controlplane | grep Taint
+Taints:             <none>
+controlplane $ kubectl describe node master | grep Taint
+Error from server (NotFound): nodes "master" not found
+controlplane $ kubectl taint nodes master node-role.kubernetes.io/master:NoSchedule-
+Error from server (NotFound): nodes "master" not found
+controlplane $ kubectl describe pod mosquito
+Name:         mosquito
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.26
+Start Time:   Wed, 13 Jan 2021 07:29:25 +0000
+Labels:       run=mosquito
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.3
+IPs:
+  IP:  10.244.1.3
+Containers:
+  mosquito:
+    Container ID:   docker://8cf2a8093e70781e9475600c4d26c143e8cdd22c3b879a81c338ec1dc99e8151
+    Image:          nginx
+    Image ID:       docker-pullable://nginx@sha256:10b8cc432d56da8b61b070f4c7d2543a9ed17c2b23010b43af434fd40e2ca4aa
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Wed, 13 Jan 2021 07:29:27 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-28wnh (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-28wnh:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-28wnh
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age                From               Message
+  ----     ------            ----               ----               -------
+  Warning  FailedScheduling  20m (x9 over 30m)  default-scheduler  0/2 nodes are available: 1 node(s) had taint {node-role.kubernetes.io/master: }, that the pod didn't tolerate, 1 node(s) had taint {spray: mortein}, that the pod didn't tolerate.
+  Normal   Scheduled         19m                default-scheduler  Successfully assigned default/mosquito to node01
+  Normal   Pulling           19m                kubelet, node01    Pulling image "nginx"
+  Normal   Pulled            19m                kubelet, node01    Successfully pulled image "nginx" in 528.202144ms
+  Normal   Created           19m                kubelet, node01    Created container mosquito
+  Normal   Started           19m                kubelet, node01    Started container mosquito
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.
