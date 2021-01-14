@@ -1,0 +1,55 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get ds --all-namespace
+Error: unknown flag: --all-namespace
+See 'kubectl get --help' for usage.
+controlplane $ kubectl get ds --all-namespaces
+NAMESPACE     NAME                      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR  AGE
+kube-system   kube-flannel-ds-amd64     2         2         2       2            2           <none>  2m3skube-system   kube-flannel-ds-arm       0         0         0       0            0           <none>  2m3skube-system   kube-flannel-ds-arm64     0         0         0       0            0           <none>  2m3s
+kube-system   kube-flannel-ds-ppc64le   0         0         0       0            0           <none>  2m3s
+kube-system   kube-flannel-ds-s390x     0         0         0       0            0           <none>  2m3s
+kube-system   kube-proxy                2         2         2       2            2           kubernetes.io/os=linux  2m5s
+controlplane $ kubectl get nodes
+NAME           STATUS   ROLES    AGE     VERSION
+controlplane   Ready    master   4m9s    v1.19.0
+node01         Ready    <none>   3m40s   v1.19.0
+controlplane $ kubectl -n kube-system | grep proxy
+  proxy         Run a proxy to the Kubernetes API server
+controlplane $ kubectl -n kube-system get pods -o wide | grep proxy
+kube-proxy-hr6hz                       1/1     Running   0          4m53s   172.17.0.19   node01         <none>      <none>
+kube-proxy-lkglw                       1/1     Running   0          5m2s    172.17.0.18   controlplane   <none>      <none>
+controlplane $ kubectl -n kube-system describe ds kube-flannel-ds-amd64 | grep -i image
+    Image:      quay.io/coreos/flannel:v0.12.0-amd64
+    Image:      quay.io/coreos/flannel:v0.12.0-amd64
+controlplane $ kubectl create deploy elasticsearch --image=k8s.gcr.io/fluentd-elasticsearch:1.20 --dry-run -o yaml > 6.yaml
+W0114 13:41:14.147472      61 helpers.go:553] --dry-run is deprecated and can be replaced with --dry-run=client.
+controlplane $ vi 6.yaml
+controlplane $ cat 6.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: elasticsearch
+  name: elasticsearch
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - image: k8s.gcr.io/fluentd-elasticsearch:1.20
+        name: fluentd-elasticsearch
+controlplane $ kubectl apply -f 6.yaml
+daemonset.apps/elasticsearch created
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

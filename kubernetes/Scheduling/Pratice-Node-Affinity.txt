@@ -1,0 +1,214 @@
+controlplane $
+controlplane $
+controlplane $ kubectl describe node nodes01
+Error from server (NotFound): nodes "nodes01" not found
+controlplane $ kubectl describe node node01
+Name:               node01
+Roles:              <none>
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=node01
+                    kubernetes.io/os=linux
+Annotations:        flannel.alpha.coreos.com/backend-data: null
+                    flannel.alpha.coreos.com/backend-type: host-gw
+                    flannel.alpha.coreos.com/kube-subnet-manager: true
+                    flannel.alpha.coreos.com/public-ip: 172.17.0.15
+                    kubeadm.alpha.kubernetes.io/cri-socket: /var/run/dockershim.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Thu, 14 Jan 2021 08:41:51 +0000
+Taints:             <none>
+Unschedulable:      false
+Lease:
+  HolderIdentity:  node01
+  AcquireTime:     <unset>
+  RenewTime:       Thu, 14 Jan 2021 08:48:41 +0000
+Conditions:
+  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason             Message
+  ----                 ------  -----------------                 ------------------                ------             -------
+  NetworkUnavailable   False   Thu, 14 Jan 2021 08:42:02 +0000   Thu, 14 Jan 2021 08:42:02 +0000   FlannelIsUp             Flannel is running on this node
+  MemoryPressure       False   Thu, 14 Jan 2021 08:47:23 +0000   Thu, 14 Jan 2021 08:41:51 +0000   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure         False   Thu, 14 Jan 2021 08:47:23 +0000   Thu, 14 Jan 2021 08:41:51 +0000   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure          False   Thu, 14 Jan 2021 08:47:23 +0000   Thu, 14 Jan 2021 08:41:51 +0000   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready                True    Thu, 14 Jan 2021 08:47:23 +0000   Thu, 14 Jan 2021 08:42:01 +0000   KubeletReady             kubelet is posting ready status. AppArmor enabled
+Addresses:
+  InternalIP:  172.17.0.15
+  Hostname:    node01
+Capacity:
+  cpu:                2
+  ephemeral-storage:  199545168Ki
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             4039104Ki
+  pods:               110
+Allocatable:
+  cpu:                2
+  ephemeral-storage:  183900826525
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             3936704Ki
+  pods:               110
+System Info:
+  Machine ID:                 82ccbc1cc162c729e2d3c2506000039a
+  System UUID:                82ccbc1cc162c729e2d3c2506000039a
+  Boot ID:                    d634dc32-50bd-48f9-8407-7e77656e02f9
+  Kernel Version:             4.15.0-122-generic
+  OS Image:                   Ubuntu 18.04.5 LTS
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://19.3.13
+  Kubelet Version:            v1.19.0
+  Kube-Proxy Version:         v1.19.0
+PodCIDR:                      10.244.1.0/24
+PodCIDRs:                     10.244.1.0/24
+Non-terminated Pods:          (2 in total)
+  Namespace                   Name                           CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                   ----                           ------------  ----------  ---------------  -------------  ---
+  kube-system                 kube-flannel-ds-amd64-fjtpd    100m (5%)     100m (5%)   50Mi (1%)        50Mi (1%)    6m53s
+  kube-system                 kube-proxy-tjc9h               0 (0%)        0 (0%)      0 (0%)           0 (0%)    6m53s
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests   Limits
+  --------           --------   ------
+  cpu                100m (5%)  100m (5%)
+  memory             50Mi (1%)  50Mi (1%)
+  ephemeral-storage  0 (0%)     0 (0%)
+  hugepages-1Gi      0 (0%)     0 (0%)
+  hugepages-2Mi      0 (0%)     0 (0%)
+Events:
+  Type    Reason                   Age    From                Message
+  ----    ------                   ----   ----                -------
+  Normal  Starting                 6m53s  kubelet, node01     Starting kubelet.
+  Normal  NodeHasSufficientMemory  6m53s  kubelet, node01     Node node01 status is now: NodeHasSufficientMemory
+  Normal  NodeHasNoDiskPressure    6m53s  kubelet, node01     Node node01 status is now: NodeHasNoDiskPressure
+  Normal  NodeHasSufficientPID     6m53s  kubelet, node01     Node node01 status is now: NodeHasSufficientPID
+  Normal  NodeAllocatableEnforced  6m53s  kubelet, node01     Updated Node Allocatable limit across pods
+  Normal  Starting                 6m48s  kube-proxy, node01  Starting kube-proxy.
+  Normal  NodeReady                6m43s  kubelet, node01     Node node01 status is now: NodeReady
+controlplane $ kubectl label node node01 color=blue
+node/node01 labeled
+controlplane $ kubectl create deploy blue --image=nginx --replicas=6
+deployment.apps/blue created
+controlplane $ kubectl get pod
+NAME                    READY   STATUS    RESTARTS   AGE
+blue-7bb46df96d-5v6nh   1/1     Running   0          14s
+blue-7bb46df96d-b5vgk   1/1     Running   0          14s
+blue-7bb46df96d-gnltv   1/1     Running   0          14s
+blue-7bb46df96d-n4d2t   1/1     Running   0          14s
+blue-7bb46df96d-pvh8h   1/1     Running   0          14s
+blue-7bb46df96d-szsf9   1/1     Running   0          14s
+controlplane $ kubectl describe deploy blue
+Name:                   blue
+Namespace:              default
+CreationTimestamp:      Thu, 14 Jan 2021 08:50:49 +0000
+Labels:                 app=blue
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=blue
+Replicas:               6 desired | 6 updated | 6 total | 6 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=blue
+  Containers:
+   nginx:
+    Image:        nginx
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   blue-7bb46df96d (6/6 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  55s   deployment-controller  Scaled up replica set blue-7bb46df96d to 6
+controlplane $ kubectl get nodes
+NAME           STATUS   ROLES    AGE   VERSION
+controlplane   Ready    master   11m   v1.19.0
+node01         Ready    <none>   10m   v1.19.0
+controlplane $ kubectl get pod --show-node
+Error: unknown flag: --show-node
+See 'kubectl get --help' for usage.
+controlplane $ cat /var/answers/blue-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: color
+                operator: In
+                values:
+                - blue
+controlplane $ kubectl get nodes --show-labels
+NAME           STATUS   ROLES    AGE   VERSION   LABELS
+controlplane   Ready    master   14m   v1.19.0   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=controlplane,kubernetes.io/os=linux,node-role.kubernetes.io/master=
+node01         Ready    <none>   13m   v1.19.0   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,color=blue,kubernetes.io/arch=amd64,kubernetes.io/hostname=node01,kubernetes.io/os=linux
+controlplane $ kubectl get deploy/blue -o yaml > 6.yaml
+controlplane $ vi 6.yaml
+controlplane $ vi 6.yaml
+controlplane $ kubectl edit deploy/blue
+Edit cancelled, no changes made.
+controlplane $ kubectl edit deploy/blue
+deployment.apps/blue edited
+controlplane $ cat /var/answers/red-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: red
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+controlplane $ kubectl create deploy red --image=nginx --replicas=3
+deployment.apps/red created
+controlplane $ kubectl edit deploy/red
+deployment.apps/red edited
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

@@ -1,0 +1,188 @@
+
+ps -ef | grep kubelet | grep "\--config"
+결과에서 --config 파일 위치 찾아 복사
+grep -i static 복사한 파일 이름 (경로 포함)
+staticPodPath: static pod yaml 파일 위치
+
+grep -i image kube-apiserver.yaml
+결과로 image 이름 확인 가능
+
+controlplane $
+controlplane $
+controlplane $ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                   READY   STATUS    RESTARTS   AGE
+kube-system   coredns-f9fd979d6-bc8tw                1/1     Running   0          22m
+kube-system   coredns-f9fd979d6-mks6h                1/1     Running   0          22m
+kube-system   etcd-controlplane                      1/1     Running   0          22m
+kube-system   kube-apiserver-controlplane            1/1     Running   0          22m
+kube-system   kube-controller-manager-controlplane   1/1     Running   0          22m
+kube-system   kube-flannel-ds-amd64-bdnbv            1/1     Running   0          22m
+kube-system   kube-flannel-ds-amd64-h7kwn            1/1     Running   0          22m
+kube-system   kube-proxy-4hfc4                       1/1     Running   0          22m
+kube-system   kube-proxy-qhdfq                       1/1     Running   0          22m
+kube-system   kube-scheduler-controlplane            1/1     Running   0          22m
+controlplane $ kubectl get pods --all-namespaces | grep controlplane
+kube-system   etcd-controlplane                      1/1     Running   0          23m
+kube-system   kube-apiserver-controlplane            1/1     Running   0          23m
+kube-system   kube-controller-manager-controlplane   1/1     Running   0          23m
+kube-system   kube-scheduler-controlplane            1/1     Running   0          23m
+controlplane $ cd /etc/kubernetes/manifests/
+controlplane $ ls -l
+total 16
+-rw------- 1 root root 2096 Jan 14 13:34 etcd.yaml
+-rw------- 1 root root 3663 Jan 14 13:34 kube-apiserver.yaml
+-rw------- 1 root root 3345 Jan 14 13:34 kube-controller-manager.yaml
+-rw------- 1 root root 1384 Jan 14 13:34 kube-scheduler.yaml
+controlplane $ kubectl describe pod kube-apiserver-controlplane | grep image
+Error from server (NotFound): pods "kube-apiserver-controlplane" not found
+controlplane $ kubectl describe pod kube-apiserver-controlplane -n kube-system | grep image
+controlplane $ kubectl describe pod kube-apiserver-controlplane -n kube-system | grep -i image
+    Image:         k8s.gcr.io/kube-apiserver:v1.19.0
+    Image ID:      docker-pullable://k8s.gcr.io/kube-apiserver@sha256:522d17d35a8994637d27d1232bebd35cfae8e3e21ab359431403f2b8023e332c
+controlplane $ kubectl run static-busybox --image=busybox --dry-run=client -o yaml > 8.yaml
+controlplane $ vi 8.yaml
+controlplane $ cp 8.yaml /etc/kubernetes/manifests/
+cp: '8.yaml' and '/etc/kubernetes/manifests/8.yaml' are the same file
+controlplane $ cat /etc/kubernetes/manifests/8.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: static-busybox
+  name: static-busybox
+spec:
+  containers:
+  - image: busybox
+    name: static-busybox
+    command: ["sleep", "1000"]
+controlplane $ kubectl get pod
+NAME                          READY   STATUS    RESTARTS   AGE
+static-busybox-controlplane   1/1     Running   1          19s
+controlplane $ vi /etc/kubernetes/manifests/8.yaml
+controlplane $ kubectl get pod
+NAME                          READY   STATUS    RESTARTS   AGE
+static-busybox-controlplane   1/1     Running   1          40s
+static-greenbox-node01        1/1     Running   0          21s
+controlplane $ kubectl get nodes
+NAME           STATUS   ROLES    AGE   VERSION
+controlplane   Ready    master   31m   v1.19.0
+node01         Ready    <none>   31m   v1.19.0
+controlplane $ kubectl get nodes -o w ide
+NAME           STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
+controlplane   Ready    master   31m   v1.19.0   172.17.0.64   <none>        Ubuntu 18.04.5 LTS   4.15.0-122-generic   docker://19.3.13
+node01         Ready    <none>   31m   v1.19.0   172.17.0.68   <none>        Ubuntu 18.04.5 LTS   4.15.0-122-generic   docker://19.3.13
+controlplane $ ssh node01
+ssh: Could not resolve hostname node01: Temporary failure in name resolution
+controlplane $ ssh 172.17.0.68
+node01 $ cd /etc/kubernetes/mani
+-bash: cd: /etc/kubernetes/mani: No such file or directory
+node01 $ cd /etc/kubernetes/
+node01 $ ls
+kubelet.conf  pki
+node01 $ cat kubelet.conf
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeE1ERXhOREV6TXpReU1Gb1hEVE14TURFeE1qRXpNelF5TUZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTGd3CmtkcS9qbVVHUmg0R2lBa0hMV3JrSTBzQVpycTg1VkhxMGpiWmNjRnpMcWdJRm93K1RZMkpHbURXQXJTYmdqZ0wKcHFyZkUvczA0c1M3TVA2SFMrZHc4MWtpZVRheFdVZnpoOGpmZ0p2RERQU0pLMlZkKzRqTzBXbFlqczdaSjZCTgo5SFp5WC9ta1ByS0xiZ09oQW1VbmtabG5tNHlhZ2l4OXR1V1ZQSEw1MkJQTzN0UU14dFJGVVVxVkRFSTgxSlhiCkN3WlFCWFJsdURVTzNMdWllWWN4SzV0dWg1b1FrMUxWdGZsY29XYk12R2UrSnlyODI1K1VuL0dsSC9tblhobVEKS04ycTZUVnhoSllNdWFSdFJ6bVlTTWF4Um14SlpWcXFMMXN4V1ZYQnVFMDlnWE40Y2ZDb3hWV2VIWHFZOENUawpvdEcxMzkyUWladHk0NjZWbXdFQ0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZBNE1lQ290RnBFVHhXWTJVMDR2d2dHYlhvMUJNQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFBY210TWova2xXdkJGbVErVUdLWGhUeTJ3aXJtTmZ4UWgxMGF4aGlHdFZCSTEwY3EvWApBbUJCazdiTU15K2F0OG02UHhOVmxqMnVDZ2xHcFdEdk90bTFHaG1HTmpLOUhWSERLNzdNdjhwTzY5ZDFUTGZuCndoaXlrOEZvNWE3ODhTVFh4UjRXdXp5TG5kU2tBNEx4enlVMmVVVXlEWWdkWFFvdXJ3OXVOREVaWDFibm1ERk4KZ29oaDVkNmpMd1RhUi8yNFNQL0g4T1N5TWMzUDkrdmkwanBwZzZBeVBsV0oxUTB3cVZoK1Yzb3dyWUxKMEZaRwp5TFdiUk1sa1dTdmJMTVc0ODhDRWgydlZDOHUycDQzRnJNM2ZWbXdjeFFwV2Vkd2Rod2w0Mm56R1plWXNBNmRhCmRTVmo5a1F3Z0l4UVJxZE5mSmUwS2FrYTY5MzBhNkRRMlIyWgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    server: https://172.17.0.64:6443
+  name: default-cluster
+contexts:
+- context:
+    cluster: default-cluster
+    namespace: default
+    user: default-auth
+  name: default-context
+current-context: default-context
+kind: Config
+preferences: {}
+users:
+- name: default-auth
+  user:
+    client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
+    client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
+node01 $ cat /var/lib/kubelet/
+cat: /var/lib/kubelet/: Is a directory
+node01 $ cd /var/lib
+node01 $ ls
+AccountsService    dbus        grub             mlocate         polkit-1                 ucf
+apt                dhcp        ieee-data        NetworkManager  private                  update-manager
+atomic             docker      initramfs-tools  nfs             python                   update-notifier
+binfmts            dockershim  kubelet          ntp             snapd                    ureadahead
+cni                dpkg        logrotate        os-prober       sudo                     usb_modeswitch
+command-not-found  gems        man-db           pam             systemd                  usbutils
+containerd         git         misc             plymouth        ubuntu-release-upgrader  vim
+node01 $ cd kubelet/
+node01 $ ls
+config.yaml        device-plugins     pki      plugins_registry  pods
+cpu_manager_state  kubeadm-flags.env  plugins  pod-resources
+node01 $ cat config.yaml
+apiVersion: kubelet.config.k8s.io/v1beta1
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    cacheTTL: 0s
+    enabled: true
+  x509:
+    clientCAFile: /etc/kubernetes/pki/ca.crt
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 0s
+    cacheUnauthorizedTTL: 0s
+cgroupDriver: systemd
+clusterDNS:
+- 10.96.0.10
+clusterDomain: cluster.local
+cpuManagerReconcilePeriod: 0s
+evictionPressureTransitionPeriod: 0s
+fileCheckFrequency: 0s
+healthzBindAddress: 127.0.0.1
+healthzPort: 10248
+httpCheckFrequency: 0s
+imageMinimumGCAge: 0s
+kind: KubeletConfiguration
+logging: {}
+nodeStatusReportFrequency: 0s
+nodeStatusUpdateFrequency: 0s
+resolvConf: /run/systemd/resolve/resolv.conf
+rotateCertificates: true
+runtimeRequestTimeout: 0s
+staticPodPath: /etc/just-to-mess-with-you
+streamingConnectionIdleTimeout: 0s
+syncFrequency: 0s
+volumeStatsAggPeriod: 0s
+node01 $ cd /etc/just-to-mess-with-you/
+node01 $ ls
+greenbox.yaml
+node01 $ rm greenbox.yaml
+node01 $ cd /etc/kubernetes/
+node01 $ ls
+kubelet.conf  pki
+node01 $ cat kubelet.conf
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeE1ERXhOREV6TXpReU1Gb1hEVE14TURFeE1qRXpNelF5TUZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTGd3CmtkcS9qbVVHUmg0R2lBa0hMV3JrSTBzQVpycTg1VkhxMGpiWmNjRnpMcWdJRm93K1RZMkpHbURXQXJTYmdqZ0wKcHFyZkUvczA0c1M3TVA2SFMrZHc4MWtpZVRheFdVZnpoOGpmZ0p2RERQU0pLMlZkKzRqTzBXbFlqczdaSjZCTgo5SFp5WC9ta1ByS0xiZ09oQW1VbmtabG5tNHlhZ2l4OXR1V1ZQSEw1MkJQTzN0UU14dFJGVVVxVkRFSTgxSlhiCkN3WlFCWFJsdURVTzNMdWllWWN4SzV0dWg1b1FrMUxWdGZsY29XYk12R2UrSnlyODI1K1VuL0dsSC9tblhobVEKS04ycTZUVnhoSllNdWFSdFJ6bVlTTWF4Um14SlpWcXFMMXN4V1ZYQnVFMDlnWE40Y2ZDb3hWV2VIWHFZOENUawpvdEcxMzkyUWladHk0NjZWbXdFQ0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZBNE1lQ290RnBFVHhXWTJVMDR2d2dHYlhvMUJNQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFBY210TWova2xXdkJGbVErVUdLWGhUeTJ3aXJtTmZ4UWgxMGF4aGlHdFZCSTEwY3EvWApBbUJCazdiTU15K2F0OG02UHhOVmxqMnVDZ2xHcFdEdk90bTFHaG1HTmpLOUhWSERLNzdNdjhwTzY5ZDFUTGZuCndoaXlrOEZvNWE3ODhTVFh4UjRXdXp5TG5kU2tBNEx4enlVMmVVVXlEWWdkWFFvdXJ3OXVOREVaWDFibm1ERk4KZ29oaDVkNmpMd1RhUi8yNFNQL0g4T1N5TWMzUDkrdmkwanBwZzZBeVBsV0oxUTB3cVZoK1Yzb3dyWUxKMEZaRwp5TFdiUk1sa1dTdmJMTVc0ODhDRWgydlZDOHUycDQzRnJNM2ZWbXdjeFFwV2Vkd2Rod2w0Mm56R1plWXNBNmRhCmRTVmo5a1F3Z0l4UVJxZE5mSmUwS2FrYTY5MzBhNkRRMlIyWgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    server: https://172.17.0.64:6443
+  name: default-cluster
+contexts:
+- context:
+    cluster: default-cluster
+    namespace: default
+    user: default-auth
+  name: default-context
+current-context: default-context
+kind: Config
+preferences: {}
+users:
+- name: default-auth
+  user:
+    client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
+    client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
+node01 $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.
