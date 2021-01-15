@@ -1,0 +1,264 @@
+
+kubectl logs webapp-1 | grep USER5
+
+ $ kubectl logs
+error: expected 'logs [-f] [-p] (POD | TYPE/NAME) [-c CONTAINER]'.
+POD or TYPE/NAME is a required argument for the logs command
+See 'kubectl logs -h' for help and examples
+controlplane $ kubectl logs -h
+Print the logs for a container in a pod or specified resource. If the pod has only one container,
+the container name is optional.
+
+Examples:
+  # Return snapshot logs from pod nginx with only one container
+  kubectl logs nginx
+
+  # Return snapshot logs from pod nginx with multi containers
+  kubectl logs nginx --all-containers=true
+
+  # Return snapshot logs from all containers in pods defined by label app=nginx
+  kubectl logs -lapp=nginx --all-containers=true
+
+  # Return snapshot of previous terminated ruby container logs from pod web-1
+  kubectl logs -p -c ruby web-1
+
+  # Begin streaming the logs of the ruby container in pod web-1
+  kubectl logs -f -c ruby web-1
+
+  # Begin streaming the logs from all containers in pods defined by label app=nginx
+  kubectl logs -f -lapp=nginx --all-containers=true
+
+  # Display only the most recent 20 lines of output in pod nginx
+  kubectl logs --tail=20 nginx
+
+  # Show all logs from pod nginx written in the last hour
+  kubectl logs --since=1h nginx
+
+  # Show logs from a kubelet with an expired serving certificate
+  kubectl logs --insecure-skip-tls-verify-backend nginx
+
+  # Return snapshot logs from first container of a job named hello
+  kubectl logs job/hello
+
+  # Return snapshot logs from container nginx-1 of a deployment named nginx
+  kubectl logs deployment/nginx -c nginx-1
+
+Options:
+      --all-containers=false: Get all containers' logs in the pod(s).
+  -c, --container='': Print the logs of this container
+  -f, --follow=false: Specify if the logs should be streamed.
+      --ignore-errors=false: If watching / following pod logs, allow for any errors that occur to be
+non-fatal
+      --insecure-skip-tls-verify-backend=false: Skip verifying the identity of the kubelet that logs
+are requested from.  In theory, an attacker could provide invalid log content back. You might want
+to use this if your kubelet serving certificates have expired.
+      --limit-bytes=0: Maximum bytes of logs to return. Defaults to no limit.
+      --max-log-requests=5: Specify maximum number of concurrent logs to follow when using by a
+selector. Defaults to 5.
+      --pod-running-timeout=20s: The length of time (like 5s, 2m, or 3h, higher than zero) to wait
+until at least one pod is running
+      --prefix=false: Prefix each log line with the log source (pod name and container name)
+  -p, --previous=false: If true, print the logs for the previous instance of the container in a pod
+if it exists.
+  -l, --selector='': Selector (label query) to filter on.
+      --since=0s: Only return logs newer than a relative duration like 5s, 2m, or 3h. Defaults to
+all logs. Only one of since-time / since may be used.
+      --since-time='': Only return logs after a specific date (RFC3339). Defaults to all logs. Only
+one of since-time / since may be used.
+      --tail=-1: Lines of recent log file to display. Defaults to -1 with no selector, showing all
+log lines otherwise 10, if a selector is provided.
+      --timestamps=false: Include timestamps on each line in the log output
+
+Usage:
+  kubectl logs [-f] [-p] (POD | TYPE/NAME) [-c CONTAINER] [options]
+
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+controlplane $ kubectl logs webapp-1
+[2021-01-15 02:22:50,714] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:22:51,715] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:22:52,717] INFO in event-simulator: USER1 is viewing page3
+[2021-01-15 02:22:53,718] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:22:54,720] INFO in event-simulator: USER4 is viewing page2
+[2021-01-15 02:22:55,721] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:22:55,722] INFO in event-simulator: USER1 is viewing page1
+[2021-01-15 02:22:56,724] INFO in event-simulator: USER1 is viewing page1
+[2021-01-15 02:22:57,725] INFO in event-simulator: USER3 is viewing page3
+[2021-01-15 02:22:58,726] WARNING in event-simulator: USER7 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:22:58,726] INFO in event-simulator: USER4 logged out
+[2021-01-15 02:22:59,727] INFO in event-simulator: USER4 logged out
+[2021-01-15 02:23:00,729] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:00,729] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:23:01,731] INFO in event-simulator: USER1 is viewing page1
+[2021-01-15 02:23:02,733] INFO in event-simulator: USER2 logged out
+[2021-01-15 02:23:03,734] INFO in event-simulator: USER1 is viewing page2
+[2021-01-15 02:23:04,736] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:23:05,738] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:05,738] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:23:06,740] WARNING in event-simulator: USER7 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:23:06,741] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:23:07,742] INFO in event-simulator: USER1 is viewing page3
+[2021-01-15 02:23:08,744] INFO in event-simulator: USER2 logged out
+[2021-01-15 02:23:09,746] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:23:10,747] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:10,748] INFO in event-simulator: USER4 is viewing page2
+[2021-01-15 02:23:11,750] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:23:12,752] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:23:13,754] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:23:14,755] WARNING in event-simulator: USER7 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:23:14,755] INFO in event-simulator: USER3 logged out
+[2021-01-15 02:23:15,757] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:15,757] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:23:16,759] INFO in event-simulator: USER1 is viewing page2
+[2021-01-15 02:23:17,760] INFO in event-simulator: USER4 is viewing page1
+[2021-01-15 02:23:18,762] INFO in event-simulator: USER3 logged out
+[2021-01-15 02:23:19,763] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:23:20,765] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:20,765] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:23:21,770] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:23:22,772] WARNING in event-simulator: USER7 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:23:22,773] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:23:23,774] INFO in event-simulator: USER1 is viewing page1
+[2021-01-15 02:23:24,776] INFO in event-simulator: USER2 logged in
+[2021-01-15 02:23:25,778] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:25,778] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:23:26,780] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:23:27,781] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:23:28,783] INFO in event-simulator: USER3 is viewing page3
+[2021-01-15 02:23:29,784] INFO in event-simulator: USER1 is viewing page2
+[2021-01-15 02:23:30,786] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:30,787] WARNING in event-simulator: USER7 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:23:30,787] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:23:31,788] INFO in event-simulator: USER2 logged out
+[2021-01-15 02:23:32,790] INFO in event-simulator: USER2 is viewing page1
+[2021-01-15 02:23:33,792] INFO in event-simulator: USER2 logged in
+[2021-01-15 02:23:34,794] INFO in event-simulator: USER3 logged out
+[2021-01-15 02:23:35,795] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:35,795] INFO in event-simulator: USER2 is viewing page2
+[2021-01-15 02:23:36,797] INFO in event-simulator: USER2 logged in
+[2021-01-15 02:23:37,798] INFO in event-simulator: USER1 is viewing page2
+[2021-01-15 02:23:38,800] WARNING in event-simulator: USER7 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:23:38,800] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:23:39,802] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:23:40,803] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:40,804] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:23:41,806] INFO in event-simulator: USER1 logged out
+[2021-01-15 02:23:42,807] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:23:43,809] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:23:44,810] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:23:45,811] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:23:45,812] INFO in event-simulator: USER4 logged out
+[2021-01-15 02:23:46,813] WARNING in event-simulator: USER7 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:23:46,813] INFO in event-simulator: USER1 is viewing page3
+[2021-01-15 02:23:47,815] INFO in event-simulator: USER2 is viewing page2
+[2021-01-15 02:23:48,817] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:23:49,818] INFO in event-simulator: USER4 is viewing page1
+controlplane $ kubectl get pod
+NAME       READY   STATUS    RESTARTS   AGE
+webapp-1   1/1     Running   0          83s
+webapp-2   2/2     Running   0          8s
+controlplane $ kubectl logs webapp-2
+error: a container name must be specified for pod webapp-2, choose one of: [simple-webapp db]
+controlplane $ kubectl logs webapp-2 --all-containers=true
+[2021-01-15 02:24:01,264] INFO in event-simulator: USER2 is viewing page1
+[2021-01-15 02:24:02,264] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:24:03,266] INFO in event-simulator: USER1 logged in
+[2021-01-15 02:24:04,268] INFO in event-simulator: USER4 logged out
+[2021-01-15 02:24:05,269] INFO in event-simulator: USER2 logged out
+[2021-01-15 02:24:06,271] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:06,271] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:24:07,272] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:24:08,274] INFO in event-simulator: USER3 is viewing page3
+[2021-01-15 02:24:09,276] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:24:09,276] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:24:10,278] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:24:11,279] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:11,280] INFO in event-simulator: USER4 is viewing page1
+[2021-01-15 02:24:12,281] INFO in event-simulator: USER3 logged out
+[2021-01-15 02:24:13,283] INFO in event-simulator: USER1 logged out
+[2021-01-15 02:24:14,284] INFO in event-simulator: USER4 is viewing page2
+[2021-01-15 02:24:15,286] INFO in event-simulator: USER2 is viewing page1
+[2021-01-15 02:24:16,287] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:16,288] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:24:17,289] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:24:17,289] INFO in event-simulator: USER3 logged out
+[2021-01-15 02:24:18,291] INFO in event-simulator: USER1 logged in
+[2021-01-15 02:24:19,292] INFO in event-simulator: USER4 is viewing page1
+[2021-01-15 02:24:20,294] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:24:21,295] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:21,296] INFO in event-simulator: USER1 is viewing page3
+[2021-01-15 02:24:22,297] INFO in event-simulator: USER1 logged in
+[2021-01-15 02:24:23,299] INFO in event-simulator: USER1 is viewing page1
+[2021-01-15 02:24:24,301] INFO in event-simulator: USER2 is viewing page2
+[2021-01-15 02:24:25,302] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:24:25,302] INFO in event-simulator: USER4 is viewing page1
+[2021-01-15 02:24:26,304] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:26,304] INFO in event-simulator: USER3 is viewing page3
+[2021-01-15 02:24:27,305] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:24:28,307] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:24:29,309] INFO in event-simulator: USER3 logged out
+[2021-01-15 02:24:30,311] INFO in event-simulator: USER4 is viewing page2
+[2021-01-15 02:24:31,312] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:31,313] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:24:32,314] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:24:33,315] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:24:33,316] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:24:34,317] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:24:35,319] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:24:36,321] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:36,322] INFO in event-simulator: USER4 logged in
+[2021-01-15 02:24:37,323] INFO in event-simulator: USER3 is viewing page3
+[2021-01-15 02:24:38,325] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:24:39,327] INFO in event-simulator: USER2 is viewing page2
+[2021-01-15 02:24:40,329] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:24:41,330] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:41,331] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:24:41,331] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:24:42,332] INFO in event-simulator: USER3 logged out
+[2021-01-15 02:24:43,334] INFO in event-simulator: USER2 logged out
+[2021-01-15 02:24:44,335] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:24:45,337] INFO in event-simulator: USER2 logged in
+[2021-01-15 02:24:46,338] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:46,339] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:24:47,339] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:24:48,341] INFO in event-simulator: USER3 logged out
+[2021-01-15 02:24:49,343] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:24:49,343] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:24:50,345] INFO in event-simulator: USER2 logged in
+[2021-01-15 02:24:51,346] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:51,347] INFO in event-simulator: USER2 is viewing page1
+[2021-01-15 02:24:52,349] INFO in event-simulator: USER2 is viewing page3
+[2021-01-15 02:24:53,350] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:24:54,352] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:24:55,354] INFO in event-simulator: USER3 is viewing page2
+[2021-01-15 02:24:56,355] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:24:56,356] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:24:57,357] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:24:57,357] INFO in event-simulator: USER2 logged in
+[2021-01-15 02:24:58,359] INFO in event-simulator: USER2 logged in
+[2021-01-15 02:24:59,360] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:25:00,362] INFO in event-simulator: USER2 is viewing page2
+[2021-01-15 02:25:01,363] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:25:01,363] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:25:02,365] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:25:03,367] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:25:04,368] INFO in event-simulator: USER2 is viewing page1
+[2021-01-15 02:25:05,370] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:25:05,370] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:25:06,371] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:25:06,372] INFO in event-simulator: USER4 is viewing page1
+[2021-01-15 02:25:07,373] INFO in event-simulator: USER4 is viewing page2
+[2021-01-15 02:25:08,375] INFO in event-simulator: USER2 is viewing page2
+[2021-01-15 02:25:09,376] INFO in event-simulator: USER3 logged in
+[2021-01-15 02:25:10,378] INFO in event-simulator: USER2 is viewing page1
+[2021-01-15 02:25:11,379] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+[2021-01-15 02:25:11,380] INFO in event-simulator: USER3 is viewing page1
+[2021-01-15 02:25:12,381] INFO in event-simulator: USER2 is viewing page2
+[2021-01-15 02:25:13,383] WARNING in event-simulator: USER30 Order failed as the item is OUT OF STOCK.
+[2021-01-15 02:25:13,383] INFO in event-simulator: USER4 is viewing page3
+[2021-01-15 02:25:14,385] INFO in event-simulator: USER1 is viewing page1
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

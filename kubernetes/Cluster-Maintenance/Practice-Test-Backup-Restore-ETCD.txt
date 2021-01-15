@@ -1,0 +1,236 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get deployments.apps
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+blue   3/3     3            3           19s
+red    2/2     2            2           20s
+controlplane $ kubectl -n kube-system get podNAME                                   READY   STATUS    RESTARTS   AGE
+coredns-f9fd979d6-b7hwd                1/1     Running   0          107s
+coredns-f9fd979d6-pgsgx                1/1     Running   0          107setcd-controlplane                      1/1     Running   0          116s
+kube-apiserver-controlplane            1/1     Running   0          116skube-controller-manager-controlplane   1/1     Running   0          116s
+kube-flannel-ds-amd64-ttx2p            1/1     Running   1          93s
+kube-flannel-ds-amd64-w7qrm            1/1     Running   0          107s
+kube-proxy-7kj56                       1/1     Running   0          93s
+kube-proxy-cv8vm                       1/1     Running   0          107s
+kube-scheduler-controlplane            1/1     Running   0          115s
+controlplane $ kubectl -n kube-system describe pod etcd-controlplane
+Name:                 etcd-controlplane
+Namespace:            kube-system
+Priority:             2000001000
+Priority Class Name:  system-node-critical
+Node:                 controlplane/172.17.0.48
+Start Time:           Fri, 15 Jan 2021 17:06:42 +0000
+Labels:               component=etcd
+                      tier=control-plane
+Annotations:          kubeadm.kubernetes.io/etcd.advertise-client-urls: https://172.17.0.48:2379
+                      kubernetes.io/config.hash: 1e0ddd03bb01f5e323caf8238148cbd9
+                      kubernetes.io/config.mirror: 1e0ddd03bb01f5e323caf8238148cbd9
+                      kubernetes.io/config.seen: 2021-01-15T17:06:36.184260179Z
+                      kubernetes.io/config.source: file
+Status:               Running
+IP:                   172.17.0.48
+IPs:
+  IP:           172.17.0.48
+Controlled By:  Node/controlplane
+Containers:
+  etcd:
+    Container ID:  docker://6dec09cdd54eb2f0987102d2a579a12b22ca2c383bd688c2ee399b8593f93732
+    Image:         k8s.gcr.io/etcd:3.4.9-1
+    Image ID:      docker-pullable://k8s.gcr.io/etcd@sha256:735f090b15d5efc576da1602d8c678bf39a7605c0718ed915daec8f2297db2ff
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      etcd
+      --advertise-client-urls=https://172.17.0.48:2379      --cert-file=/etc/kubernetes/pki/etcd/server.crt      --client-cert-auth=true      --data-dir=/var/lib/etcd
+      --initial-advertise-peer-urls=https://172.17.0.48:2380
+      --initial-cluster=controlplane=https://172.17.0.48:2380
+      --key-file=/etc/kubernetes/pki/etcd/server.key
+      --listen-client-urls=https://127.0.0.1:2379,https://172.17.0.48:2379
+      --listen-metrics-urls=http://127.0.0.1:2381
+      --listen-peer-urls=https://172.17.0.48:2380
+      --name=controlplane
+      --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt
+      --peer-client-cert-auth=true
+      --peer-key-file=/etc/kubernetes/pki/etcd/peer.key
+      --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+      --snapshot-count=10000
+      --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+    State:          Running
+      Started:      Fri, 15 Jan 2021 17:06:22 +0000
+    Ready:          True
+    Restart Count:  0
+    Liveness:       http-get http://127.0.0.1:2381/health delay=10s timeout=15s period=10s #success=1 #failure=8
+    Startup:        http-get http://127.0.0.1:2381/health delay=10s timeout=15s period=10s #success=1 #failure=24
+    Environment:    <none>
+    Mounts:
+      /etc/kubernetes/pki/etcd from etcd-certs (rw)
+      /var/lib/etcd from etcd-data (rw)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  etcd-certs:
+    Type:          HostPath (bare host directory volume)
+    Path:          /etc/kubernetes/pki/etcd
+    HostPathType:  DirectoryOrCreate
+  etcd-data:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/lib/etcd
+    HostPathType:  DirectoryOrCreate
+QoS Class:         BestEffort
+Node-Selectors:    <none>
+Tolerations:       :NoExecuteop=Exists
+Events:            <none>
+controlplane $ ETCDCTL_API=3 etcdctl snapshot save -h
+NAME:
+        snapshot save - Stores an etcd node backend snapshot to a given file
+
+USAGE:
+        etcdctl snapshot save <filename> [flags]
+
+OPTIONS:
+  -h, --help[=false]    help for save
+
+GLOBAL OPTIONS:
+      --cacert=""                               verify certificates of TLS-enabled secure servers using this CA bundle
+      --cert=""                                 identify secure client using this TLS certificate file
+      --command-timeout=5s                      timeout for short running command (excluding dial timeout)
+      --debug[=false]                           enable client-side debug logging
+      --dial-timeout=2s                         dial timeout for client connections
+  -d, --discovery-srv=""                        domain name to query for SRV records describing cluster endpoints
+      --discovery-srv-name=""                   service name to query when using DNS discovery
+      --endpoints=[127.0.0.1:2379]              gRPC endpoints
+      --hex[=false]                             print byte strings as hex encoded strings
+      --insecure-discovery[=true]               accept insecure SRV records describing cluster endpoints
+      --insecure-skip-tls-verify[=false]        skip server certificate verification (CAUTION: this option shouldbe enabled only for testing purposes)
+      --insecure-transport[=true]               disable transport security for client connections
+      --keepalive-time=2s                       keepalive time for client connections
+      --keepalive-timeout=6s                    keepalive timeout for client connections
+      --key=""                                  identify secure client using this TLS key file
+      --password=""                             password for authentication (if this option is used, --user option shouldn't include password)
+      --user=""                                 username[:password] for authentication (prompt if password is notsupplied)
+  -w, --write-out="simple"                      set the output format (fields, json, protobuf, simple, table)
+
+controlplane $  #  /opt/snapshot-pre-boot.db
+controlplane $ ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /opt/snapshot-pre-boot.db
+{"level":"info","ts":1610731563.5918047,"caller":"snapshot/v3_snapshot.go:119","msg":"created temporary db file","path":"/opt/snapshot-pre-boot.db.part"}
+{"level":"info","ts":"2021-01-15T17:26:03.606Z","caller":"clientv3/maintenance.go:200","msg":"opened snapshot stream; downloading"}
+{"level":"info","ts":1610731563.6061988,"caller":"snapshot/v3_snapshot.go:127","msg":"fetching snapshot","endpoint":"https://127.0.0.1:2379"}
+{"level":"info","ts":"2021-01-15T17:26:03.707Z","caller":"clientv3/maintenance.go:208","msg":"completed snapshot read; closing"}
+{"level":"info","ts":1610731563.734242,"caller":"snapshot/v3_snapshot.go:142","msg":"fetched snapshot","endpoint":"https://127.0.0.1:2379","size":"3.4 MB","took":0.142364823}
+{"level":"info","ts":1610731563.7347853,"caller":"snapshot/v3_snapshot.go:152","msg":"saved","path":"/opt/snapshot-pre-boot.db"}
+Snapshot saved at /opt/snapshot-pre-boot.db
+controlplane $ ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key member listca7b38b9ce9e378f, started, controlplane, https://172.17.0.48:2380, https://172.17.0.48:2379, false
+controlplane $ kubectl get pods,deployments,svc
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   36s
+controlplane $ ETCDCTL_API=3 etcdctl snapshot restore -hNAME:        snapshot restore - Restores an etcd member snapshot to an etcd directory
+USAGE:
+        etcdctl snapshot restore <filename> [options] [flags]
+
+OPTIONS:
+      --data-dir=""                                             Path to the data directory
+  -h, --help[=false]                                            help for restore
+      --initial-advertise-peer-urls="http://localhost:2380"     List of this member's peer URLs to advertise to the rest of the cluster
+      --initial-cluster="default=http://localhost:2380"         Initial cluster configuration for restore bootstrap
+      --initial-cluster-token="etcd-cluster"                    Initial cluster token for the etcd cluster duringrestore bootstrap
+      --name="default"                                          Human-readable name for this member
+      --skip-hash-check[=false]                                 Ignore snapshot integrity hash value (required ifcopied from data directory)
+      --wal-dir=""                                              Path to the WAL directory (use --data-dir if nonegiven)
+
+GLOBAL OPTIONS:
+      --cacert=""                               verify certificates of TLS-enabled secure servers using this CA bundle
+      --cert=""                                 identify secure client using this TLS certificate file
+      --command-timeout=5s                      timeout for short running command (excluding dial timeout)
+      --debug[=false]                           enable client-side debug logging
+      --dial-timeout=2s                         dial timeout for client connections
+  -d, --discovery-srv=""                        domain name to query for SRV records describing cluster endpoints
+      --discovery-srv-name=""                   service name to query when using DNS discovery
+      --endpoints=[127.0.0.1:2379]              gRPC endpoints
+      --hex[=false]                             print byte strings as hex encoded strings
+      --insecure-discovery[=true]               accept insecure SRV records describing cluster endpoints
+      --insecure-skip-tls-verify[=false]        skip server certificate verification (CAUTION: this option shouldbe enabled only for testing purposes)
+      --insecure-transport[=true]               disable transport security for client connections
+      --keepalive-time=2s                       keepalive time for client connections
+      --keepalive-timeout=6s                    keepalive timeout for client connections
+      --key=""                                  identify secure client using this TLS key file
+      --password=""                             password for authentication (if this option is used, --user option shouldn't include password)
+      --user=""                                 username[:password] for authentication (prompt if password is notsupplied)
+  -w, --write-out="simple"                      set the output format (fields, json, protobuf, simple, table)
+
+controlplane $ ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot restore --data-dir="/var/lib/etcd-from-backup" --initial-cluster="controlplane=https://127.0.0.1:2380" --name="controlplane" --initial-advertise-peer-urls="https://127.0.0.1:2380" --initial-cluster-token="etcd-cluster-1"  /opt/snapshot-pre-boot.db
+{"level":"info","ts":1610732586.099645,"caller":"snapshot/v3_snapshot.go:296","msg":"restoring snapshot","path":"/opt/snapshot-pre-boot.db","wal-dir":"/var/lib/etcd-from-backup/member/wal","data-dir":"/var/lib/etcd-from-backup","snap-dir":"/var/lib/etcd-from-backup/member/snap"}
+{"level":"info","ts":1610732586.145345,"caller":"mvcc/kvstore.go:380","msg":"restored last compact revision","meta-bucket-name":"meta","meta-bucket-name-key":"finishedCompactRev","restored-compact-revision":2008}
+{"level":"info","ts":1610732586.153763,"caller":"membership/cluster.go:392","msg":"added member","cluster-id":"7581d6eb2d25405b","local-member-id":"0","added-peer-id":"e92d66acd89ecf29","added-peer-peer-urls":["https://127.0.0.1:2380"]}
+{"level":"info","ts":1610732586.193517,"caller":"snapshot/v3_snapshot.go:309","msg":"restored snapshot","path":"/opt/snapshot-pre-boot.db","wal-dir":"/var/lib/etcd-from-backup/member/wal","data-dir":"/var/lib/etcd-from-backup","snap-dir":"/var/lib/etcd-from-backup/member/snap"}
+controlplane $ cd /var/lib/etcd-from-backup/
+controlplane $ ls
+member
+controlplane $ cd /etc/kubernetes/manifests/
+controlplane $ ls
+etcd.yaml  kube-apiserver.yaml  kube-controller-manager.yaml  kube-scheduler.yaml
+controlplane $ ls -l
+total 16
+-rw------- 1 root root 2096 Jan 15 17:06 etcd.yaml
+-rw------- 1 root root 3663 Jan 15 17:06 kube-apiserver.yaml
+-rw------- 1 root root 3345 Jan 15 17:06 kube-controller-manager.yaml
+-rw------- 1 root root 1384 Jan 15 17:06 kube-scheduler.yaml
+controlplane $ date
+Fri Jan 15 17:44:36 UTC 2021
+controlplane $ vi etcd.yaml
+controlplane $ vi etcd.yaml
+controlplane $ docker ps -a | grep etcd
+9aa50f5f6e69        d4ca8726196c                     "etcd --advertise-cl…"   10 seconds ago       Up 9 seconds                                   k8s_etcd_etcd-controlplane_kube-system_9dbd41b0e3824d463c0cda2d53d09944_1
+97a462d0fcca        k8s.gcr.io/pause:3.2             "/pause"                 11 seconds ago       Up 10 seconds                                   k8s_POD_etcd-controlplane_kube-system_9dbd41b0e3824d463c0cda2d53d09944_1
+e20bebcb0a05        d4ca8726196c                     "etcd --advertise-cl…"   15 seconds ago       Exited (0) 11 seconds ago                         k8s_etcd_etcd-controlplane_kube-system_9dbd41b0e3824d463c0cda2d53d09944_0
+5085301c3fc1        k8s.gcr.io/pause:3.2             "/pause"                 15 seconds ago       Exited (0) 11 seconds ago                         k8s_POD_etcd-controlplane_kube-system_9dbd41b0e3824d463c0cda2d53d09944_0
+controlplane $ watch "docker ps -a | grep etcd"
+controlplane $ history
+    1  clear
+    2  kubectl get deployments.apps
+    3  kubectl -n kube-system get pod
+    4  kubectl -n kube-system describe pod etcd-controlplane
+    5  ETCDCTL_API=3 etcdctl snapshot save -h
+    6* ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot restore --data-dir="/var/lib/etcd-from-backup" --initial-cluster="controlplane=http://127.0.0.1:2380" --name="controlplane"   /opt/snapshot-pre-boot.db
+    7  ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key member list
+    8  kubectl get pods,deployments,svc
+    9  ETCDCTL_API=3 etcdctl snapshot restore -h
+   10  ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot restore --data-dir="/var/lib/etcd-from-backup" --initial-cluster="controlplane=https://127.0.0.1:2380" --name="controlplane" --initial-advertise-peer-urls="https://127.0.0.1:2380" --initial-cluster-token="etcd-cluster-1"  /opt/snapshot-pre-boot.db
+   11  cd /var/lib/etcd-from-backup/
+   12  ls
+   13  cd /etc/kubernetes/manifests/
+   14  ls
+   15  ls -l
+   16  date
+   17  vi etcd.yaml
+   18  docker ps -a | grep etcd
+   19  watch "docker ps -a | grep etcd"
+   20  history
+controlplane $ !7
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key member list
+e92d66acd89ecf29, started, controlplane, https://127.0.0.1:2380, https://172.17.0.48:2379, false
+controlplane $ kubectl get pods,svc,deploy
+NAME                        READY   STATUS    RESTARTS   AGE
+pod/blue-746c87566d-4tzfj   1/1     Running   0          43m
+pod/blue-746c87566d-8dj6h   1/1     Running   0          43m
+pod/blue-746c87566d-kq4vh   1/1     Running   0          43m
+pod/red-75f847bf79-5kk4d    1/1     Running   0          43m
+pod/red-75f847bf79-6dqzj    1/1     Running   0          43m
+
+NAME                   TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+service/blue-service   NodePort    10.103.246.170   <none>        80:30082/TCP   43m
+service/kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP        44m
+service/red-service    NodePort    10.103.207.144   <none>        80:30080/TCP   43m
+
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/blue   3/3     3            3           43m
+deployment.apps/red    2/2     2            2           43m
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

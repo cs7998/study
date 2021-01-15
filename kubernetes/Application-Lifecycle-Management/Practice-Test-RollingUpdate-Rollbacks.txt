@@ -1,0 +1,268 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get pods
+NAME                        READY   STATUS              RESTARTS   AGE
+frontend-7776cb7d57-67r8z   1/1     Running             0          10s
+frontend-7776cb7d57-c5kdv   0/1     ContainerCreating   0          10s
+frontend-7776cb7d57-mwhft   1/1     Running             0          10s
+frontend-7776cb7d57-psg4s   1/1     Running             0          10s
+controlplane $ kubectl get pods, services
+error: arguments in resource/name form must have a single resource and name
+controlplane $ kubectl get pods, svc
+error: arguments in resource/name form must have a single resource and name
+controlplane $ kubectl get svc
+NAME             TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP          3m15s
+webapp-service   NodePort    10.105.86.183   <none>        8080:30080/TCP   29s
+controlplane $ ./curl-test.sh
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+controlplane $ kubectl get pod
+NAME                        READY   STATUS    RESTARTS   AGE
+frontend-7776cb7d57-67r8z   1/1     Running   0          87s
+frontend-7776cb7d57-c5kdv   1/1     Running   0          87s
+frontend-7776cb7d57-mwhft   1/1     Running   0          87s
+frontend-7776cb7d57-psg4s   1/1     Running   0          87s
+controlplane $ kubectl describe pod frontend-7776cb7d57-67r8z | grep -i image
+    Image:          kodekloud/webapp-color:v1
+    Image ID:       docker-pullable://kodekloud/webapp-color@sha256:27b1e0cbd55a646824c231c896bf77f8278f2d335c4f2b47cbb258edf8281ceb
+  Normal  Pulling    115s  kubelet, node01    Pulling image "kodekloud/webapp-color:v1"
+  Normal  Pulled     110s  kubelet, node01    Successfully pulled image "kodekloud/webapp-color:v1" in 4.5827791s
+controlplane $ kubectl describe deploy | grep -i strategy
+StrategyType:           RollingUpdate
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+controlplane $ kubectl get deploy
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+frontend   4/4     4            4           3m34s
+controlplane $ kubectl set image deploy/frontend kodekloud/webapp-color:v2
+error: the server doesn't have a resource type "kodekloud"
+controlplane $ kubectl edit deploy frontend
+deployment.apps/frontend edited
+controlplane $ kubectl edit deploy frontend
+Edit cancelled, no changes made.
+controlplane $ ./curl-test.sh
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v1 ; Color: blue OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+Hello, Application Version: v2 ; Color: green OK
+
+controlplane $ kubectl get pod
+NAME                        READY   STATUS        RESTARTS   AGE
+frontend-7776cb7d57-67r8z   1/1     Terminating   0          5m55s
+frontend-7776cb7d57-psg4s   0/1     Terminating   0          5m55s
+frontend-7c7fcfc8cb-2n4b4   1/1     Running       0          39s
+frontend-7c7fcfc8cb-fvwzh   1/1     Running       0          64s
+frontend-7c7fcfc8cb-kh8cp   1/1     Running       0          64s
+frontend-7c7fcfc8cb-wzfrn   1/1     Running       0          39s
+controlplane $ kubectl describe deploy frontend
+Name:                   frontend
+Namespace:              default
+CreationTimestamp:      Fri, 15 Jan 2021 03:39:04 +0000
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 2
+Selector:               name=webapp
+Replicas:               4 desired | 4 updated | 4 total | 4 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        20
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  name=webapp
+  Containers:
+   simple-webapp:
+    Image:        kodekloud/webapp-color:v2
+    Port:         8080/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   frontend-7c7fcfc8cb (4/4 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  6m38s  deployment-controller  Scaled up replica set frontend-7776cb7d57 to 4
+  Normal  ScalingReplicaSet  107s   deployment-controller  Scaled up replica set frontend-7c7fcfc8cb to 1
+  Normal  ScalingReplicaSet  107s   deployment-controller  Scaled down replica set frontend-7776cb7d57 to 3
+  Normal  ScalingReplicaSet  107s   deployment-controller  Scaled up replica set frontend-7c7fcfc8cb to 2
+  Normal  ScalingReplicaSet  82s    deployment-controller  Scaled down replica set frontend-7776cb7d57 to 1
+  Normal  ScalingReplicaSet  82s    deployment-controller  Scaled up replica set frontend-7c7fcfc8cb to 4
+  Normal  ScalingReplicaSet  59s    deployment-controller  Scaled down replica set frontend-7776cb7d57 to 0
+controlplane $ kubectl edit deploy frontend
+deployment.apps/frontend edited
+controlplane $ kubectl edit deploy frontend
+deployment.apps/frontend edited
+controlplane $ ./curl-test.sh
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Failed
+
+Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

@@ -1,0 +1,208 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get pod
+NAME             READY   STATUS    RESTARTS   AGE
+ubuntu-sleeper   1/1     Running   0          12s
+controlplane $ kubectl describe pod ubuntu-sleeper
+Name:         ubuntu-sleeper
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.24
+Start Time:   Fri, 15 Jan 2021 05:12:05 +0000
+Labels:       <none>
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.2
+IPs:
+  IP:  10.244.1.2
+Containers:
+  ubuntu:
+    Container ID:  docker://b5365843f688b2fb53ad6655bf6664117837190067268b4cc9b0f9c1c720eae8
+    Image:         ubuntu
+    Image ID:      docker-pullable://ubuntu@sha256:c95a8e48bf88e9849f3e0f723d9f49fa12c5a00cfc6e60d2bc99d87555295e4c
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sleep
+      4800
+    State:          Running
+      Started:      Fri, 15 Jan 2021 05:12:11 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-bg2rt (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-bg2rt:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-bg2rt
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  37s   default-scheduler  Successfully assigned default/ubuntu-sleeper to node01
+  Normal  Pulling    35s   kubelet, node01    Pulling image "ubuntu"
+  Normal  Pulled     31s   kubelet, node01    Successfully pulled image "ubuntu" in 3.65480007s
+  Normal  Created    31s   kubelet, node01    Created container ubuntu
+  Normal  Started    30s   kubelet, node01    Started container ubuntu
+controlplane $ vi ubuntu-sleeper-2.yaml
+controlplane $ kubectl apply -f ubuntu-sleeper-2.yaml
+pod/ubuntu-sleeper-2 created
+controlplane $ kubectl edit ubuntu-sleeper
+error: the server doesn't have a resource type "ubuntu-sleeper"
+controlplane $ kubectl edit ubuntu-sleeper-2.yaml
+error: the server doesn't have a resource type "ubuntu-sleeper-2"
+controlplane $ kubectl edit ubuntu-sleeper-2
+error: the server doesn't have a resource type "ubuntu-sleeper-2"
+controlplane $ kubectl editpod  ubuntu-sleeper-2
+Error: unknown command "editpod" for "kubectl"
+Run 'kubectl --help' for usage.
+controlplane $ kubectl edit pod  ubuntu-sleeper-2
+error: pods "ubuntu-sleeper-2" is invalid
+A copy of your changes has been stored to "/tmp/kubectl-edit-qr04l.yaml"
+error: Edit cancelled, no valid changes were saved.
+controlplane $ kubectl delete pod ubuntu-sleeper-2
+pod "ubuntu-sleeper-2" deleted
+
+
+
+^C
+controlplane $ ls
+go  ubuntu-sleeper-2.yaml  ubuntu-sleeper-3.yaml  webapp-color  webapp-color-2  webapp-color-3
+controlplane $ vi ubuntu-sleeper-2.yaml
+controlplane $ kubectl apply -f ubuntu-sleeper-2.yaml
+pod/ubuntu-sleeper-2 created
+controlplane $ vi ubuntu-sleeper-3.yaml
+controlplane $ cat ubuntu-sleeper-3.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper-3
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu
+    command:
+      - "sleep"
+      - "1200"
+controlplane $ kubectl apply -f ubuntu-sleeper-3.yaml
+pod/ubuntu-sleeper-3 created
+controlplane $ kubectl delete pod ubuntu-sleeper-3
+pod "ubuntu-sleeper-3" deleted
+vi ubun 3
+^C
+controlplane $ vi ubuntu-sleeper-3.yaml
+controlplane $ kubectl apply -f ubuntu-sleeper-3.yaml
+pod/ubuntu-sleeper-3 created
+controlplane $ cat webapp-color
+cat: webapp-color: Is a directory
+controlplane $ ld
+ld: no input files
+controlplane $ ls
+go  ubuntu-sleeper-2.yaml  ubuntu-sleeper-3.yaml  webapp-color  webapp-color-2  webapp-color-3
+controlplane $ cd webapp-color
+controlplane $ ls
+Dockerfile  Dockerfile2
+controlplane $ cat Dockerfile
+FROM python:3.6-alpine
+
+RUN pip install flask
+
+COPY . /opt/
+
+EXPOSE 8080
+
+WORKDIR /opt
+
+ENTRYPOINT ["python", "app.py"]controlplane $ cat Dockerfile3
+cat: Dockerfile3: No such file or directory
+controlplane $ cat Dockerfile2
+FROM python:3.6-alpine
+
+RUN pip install flask
+
+COPY . /opt/
+
+EXPOSE 8080
+
+WORKDIR /opt
+
+ENTRYPOINT ["python", "app.py"]
+
+CMD ["--color", "red"]controlplane $ cd ../webapp-color-2
+controlplane $ ls
+Dockerfile2  webapp-color-pod.yaml
+controlplane $ cat Dockerfile2
+FROM python:3.6-alpine
+
+RUN pip install flask
+
+COPY . /opt/
+
+EXPOSE 8080
+
+WORKDIR /opt
+
+ENTRYPOINT ["python", "app.py"]
+
+CMD ["--color", "red"]controlplane $ cat webapp-color-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp-green
+  labels:
+      name: webapp-green
+spec:
+  containers:
+  - name: simple-webapp
+    image: kodekloud/webapp-color
+    command: ["--color","green"]controlplane $ cd ../webapp-color-3
+controlplane $ ls
+Dockerfile2  webapp-color-pod-2.yaml
+controlplane $ cat Dockerfile2
+FROM python:3.6-alpine
+
+RUN pip install flask
+
+COPY . /opt/
+
+EXPOSE 8080
+
+WORKDIR /opt
+
+ENTRYPOINT ["python", "app.py"]
+
+CMD ["--color", "red"]controlplane $ cat webapp-color-pod-2.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp-green
+  labels:
+      name: webapp-green
+spec:
+  containers:
+  - name: simple-webapp
+    image: kodekloud/webapp-color
+    command: ["python", "app.py"]
+    args: ["--color", "pink"]
+controlplane $ kubectl run webapp-green --image=kodekloud/webapp-color --dry-run=client -o yaml > 10.yaml
+controlplane $ vi 10.yaml
+controlplane $ vi 10.yaml
+controlplane $ kubectl apply -f 10.yaml
+pod/webapp-green created
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

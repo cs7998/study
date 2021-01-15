@@ -1,0 +1,367 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get pod
+NAME    READY   STATUS    RESTARTS   AGE
+blue    1/1     Running   0          31s
+green   2/2     Running   0          32s
+red     1/1     Running   0          32scontrolplane $ kubectl get pod -o wide
+NAME    READY   STATUS    RESTARTS   AGE   IP           NODE     NOMINATED NODE   READINESS GATESblue    1/1     Running   0          52s   10.244.1.4   node01   <none>           <none>green   2/2     Running   0          53s   10.244.1.3   node01   <none>           <none>
+red     1/1     Running   0          53s   10.244.1.2   node01   <none>           <none>controlplane $ kubectl describe pod blue
+Name:         blue
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.86
+Start Time:   Fri, 15 Jan 2021 14:37:38 +0000
+Labels:       <none>
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.4
+IPs:
+  IP:  10.244.1.4
+Init Containers:
+  init-myservice:
+    Container ID:  docker://07937b2610bb99b045237029f9bb9ae795c2dcb5d840296d5bd81cfedfbd0301
+    Image:         busybox
+    Image ID:      docker-pullable://busybox@sha256:c5439d7db88ab5423999530349d327b04279ad3161d7596d2126dfb5b02bfd1f
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      sleep 5
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 15 Jan 2021 14:37:42 +0000
+      Finished:     Fri, 15 Jan 2021 14:37:47 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+Containers:
+  green-container-1:
+    Container ID:  docker://24767c61e64df1ac05ed6b844712804459b982f8b9fa6e9bd0ee4c1cbaf5e89f
+    Image:         busybox:1.28
+    Image ID:      docker-pullable://busybox@sha256:141c253bc4c3fd0a201d32dc1f493bcf3fff003b6df416dea4f41046e0f37d47
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo The app is running! && sleep 3600
+    State:          Running
+      Started:      Fri, 15 Jan 2021 14:37:48 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-vwmc4:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-vwmc4
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  90s   default-scheduler  Successfully assigned default/blue to node01
+  Normal  Pulling    89s   kubelet, node01    Pulling image "busybox"
+  Normal  Pulled     86s   kubelet, node01    Successfully pulled image "busybox" in 2.422809007s
+  Normal  Created    86s   kubelet, node01    Created container init-myservice
+  Normal  Started    86s   kubelet, node01    Started container init-myservice
+  Normal  Pulled     80s   kubelet, node01    Container image "busybox:1.28" already present on machine
+  Normal  Created    80s   kubelet, node01    Created container green-container-1
+  Normal  Started    80s   kubelet, node01    Started container green-container-1
+controlplane $ kubectl describe pod blue
+Name:         blue
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.86
+Start Time:   Fri, 15 Jan 2021 14:37:38 +0000
+Labels:       <none>
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.4
+IPs:
+  IP:  10.244.1.4
+Init Containers:
+  init-myservice:
+    Container ID:  docker://07937b2610bb99b045237029f9bb9ae795c2dcb5d840296d5bd81cfedfbd0301
+    Image:         busybox
+    Image ID:      docker-pullable://busybox@sha256:c5439d7db88ab5423999530349d327b04279ad3161d7596d2126dfb5b02bfd1f
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      sleep 5
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 15 Jan 2021 14:37:42 +0000
+      Finished:     Fri, 15 Jan 2021 14:37:47 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+Containers:
+  green-container-1:
+    Container ID:  docker://24767c61e64df1ac05ed6b844712804459b982f8b9fa6e9bd0ee4c1cbaf5e89f
+    Image:         busybox:1.28
+    Image ID:      docker-pullable://busybox@sha256:141c253bc4c3fd0a201d32dc1f493bcf3fff003b6df416dea4f41046e0f37d47
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo The app is running! && sleep 3600
+    State:          Running
+      Started:      Fri, 15 Jan 2021 14:37:48 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-vwmc4:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-vwmc4
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  2m30s  default-scheduler  Successfully assigned default/blue to node01
+  Normal  Pulling    2m29s  kubelet, node01    Pulling image "busybox"
+  Normal  Pulled     2m26s  kubelet, node01    Successfully pulled image "busybox" in 2.422809007s
+  Normal  Created    2m26s  kubelet, node01    Created container init-myservice
+  Normal  Started    2m26s  kubelet, node01    Started container init-myservice
+  Normal  Pulled     2m20s  kubelet, node01    Container image "busybox:1.28" already present on machine
+  Normal  Created    2m20s  kubelet, node01    Created container green-container-1
+  Normal  Started    2m20s  kubelet, node01    Started container green-container-1
+controlplane $ kubectl get pod
+NAME     READY   STATUS     RESTARTS   AGE
+blue     1/1     Running    0          3m28s
+green    2/2     Running    0          3m29s
+purple   0/1     Init:0/2   0          22s
+red      1/1     Running    0          3m29s
+controlplane $ kubectl describe pod purple
+Name:         purple
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.86
+Start Time:   Fri, 15 Jan 2021 14:40:45 +0000
+Labels:       <none>
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.5
+IPs:
+  IP:  10.244.1.5
+Init Containers:
+  warm-up-1:
+    Container ID:  docker://210472977d162ba94bb44cb48f665a2fb95c3914557635865143cfa10d9f0cd0
+    Image:         busybox:1.28
+    Image ID:      docker-pullable://busybox@sha256:141c253bc4c3fd0a201d32dc1f493bcf3fff003b6df416dea4f41046e0f37d47
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      sleep 600
+    State:          Running
+      Started:      Fri, 15 Jan 2021 14:40:46 +0000
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+  warm-up-2:
+    Container ID:
+    Image:         busybox:1.28
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      sleep 1200
+    State:          Waiting
+      Reason:       PodInitializing
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+Containers:
+  purple-container:
+    Container ID:
+    Image:         busybox:1.28
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo The app is running! && sleep 3600
+    State:          Waiting
+      Reason:       PodInitializing
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+Conditions:
+  Type              Status
+  Initialized       False
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-vwmc4:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-vwmc4
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  71s   default-scheduler  Successfully assigned default/purple to node01
+  Normal  Pulled     69s   kubelet, node01    Container image "busybox:1.28" already present on machine
+  Normal  Created    69s   kubelet, node01    Created container warm-up-1
+  Normal  Started    69s   kubelet, node01    Started container warm-up-1
+controlplane $ kubectl get pod
+NAME     READY   STATUS     RESTARTS   AGE
+blue     1/1     Running    0          4m34s
+green    2/2     Running    0          4m35s
+purple   0/1     Init:0/2   0          88s
+red      1/1     Running    0          4m35s
+controlplane $ kubectl get pod red -o yaml > 8.yaml
+controlplane $ kubectl delete pod red
+pod "red" deleted
+controlplane $ vi 8.yaml
+controlplane $ vi 8.yaml
+controlplane $ kubectl apply -f 8.yaml
+pod/red created
+controlplane $ kubectl descsribe pod orange
+Error: unknown command "descsribe" for "kubectl"
+
+Did you mean this?
+        describe
+
+Run 'kubectl --help' for usage.
+controlplane $ kubectl describe pod orange
+Name:         orange
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.86
+Start Time:   Fri, 15 Jan 2021 14:49:32 +0000
+Labels:       <none>
+Annotations:  <none>
+Status:       Pending
+IP:           10.244.1.7
+IPs:
+  IP:  10.244.1.7
+Init Containers:
+  init-myservice:
+    Container ID:  docker://a8f258edea2a52eae373b70417479fd3ffbba5ab77270b1c0208553200963a6f
+    Image:         busybox
+    Image ID:      docker-pullable://busybox@sha256:c5439d7db88ab5423999530349d327b04279ad3161d7596d2126dfb5b02bfd1f
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      sleeeep 2;
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    127
+      Started:      Fri, 15 Jan 2021 14:49:54 +0000
+      Finished:     Fri, 15 Jan 2021 14:49:54 +0000
+    Ready:          False
+    Restart Count:  2
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+Containers:
+  orange-container:
+    Container ID:
+    Image:         busybox:1.28
+    Image ID:
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      echo The app is running! && sleep 3600
+    State:          Waiting
+      Reason:       PodInitializing
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vwmc4 (ro)
+Conditions:
+  Type              Status
+  Initialized       False
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  default-token-vwmc4:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-vwmc4
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  46s                default-scheduler  Successfully assigned default/orange to node01
+  Normal   Pulled     44s                kubelet, node01    Successfully pulled image "busybox" in 1.218763149s
+  Normal   Pulled     42s                kubelet, node01    Successfully pulled image "busybox" in 475.323995ms
+  Normal   Pulling    26s (x3 over 45s)  kubelet, node01    Pulling image "busybox"
+  Normal   Created    24s (x3 over 44s)  kubelet, node01    Created container init-myservice
+  Normal   Started    24s (x3 over 43s)  kubelet, node01    Started container init-myservice
+  Normal   Pulled     24s                kubelet, node01    Successfully pulled image "busybox" in 1.72943195s
+  Warning  BackOff    9s (x4 over 42s)   kubelet, node01    Back-off restarting failed container
+controlplane $ kubectl get pod orange -o yaml > 9.yaml
+controlplane $ kubectl delete pod orange
+pod "orange" deleted
+controlplane $ vi 9ya
+controlplane $ vi 9.yaml
+controlplane $ kubectl apply -f 9.yaml
+pod/orange created
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

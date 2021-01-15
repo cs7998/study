@@ -1,0 +1,274 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get pods
+NAME           READY   STATUS    RESTARTS   AGE
+webapp-color   1/1     Running   0          26s
+controlplane $ kubectl describe pod webapp-color
+Name:         webapp-color
+Namespace:    default
+Priority:     0
+Node:         node01/172.17.0.65
+Start Time:   Fri, 15 Jan 2021 06:52:49 +0000
+Labels:       name=webapp-color
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.3
+IPs:
+  IP:  10.244.1.3
+Containers:
+  webapp-color:
+    Container ID:   docker://9a98694c021120f68ad64f3866d5024db1bc47e33e58bf26bd08b0a13cb62834
+    Image:          kodekloud/webapp-color
+    Image ID:       docker-pullable://kodekloud/webapp-color@sha256:99c3821ea49b89c7a22d3eebab5c2e1ec651452e7675af243485034a72eb1423
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Fri, 15 Jan 2021 06:52:55 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      APP_COLOR:  pink
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-wmzb4 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-wmzb4:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-wmzb4
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  51s   default-scheduler  Successfully assigned default/webapp-color to node01
+  Normal  Pulling    50s   kubelet, node01    Pulling image "kodekloud/webapp-color"
+  Normal  Pulled     46s   kubelet, node01    Successfully pulled image "kodekloud/webapp-color" in 4.006378486s
+  Normal  Created    45s   kubelet, node01    Created container webapp-color
+  Normal  Started    45s   kubelet, node01    Started container webapp-color
+controlplane $ kubectl get pod webapp-color -o yaml > 5.yaml
+controlplane $ kubectl delete pod webapp-color
+pod "webapp-color" deleted
+controlplane $ vi 5.yaml
+controlplane $ kubectl apply -f 5.yaml
+pod/webapp-color created
+controlplane $ cat 5.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2021-01-15T06:52:49Z"
+  labels:
+    name: webapp-color
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .: {}
+          f:name: {}
+      f:spec:
+        f:containers:
+          k:{"name":"webapp-color"}:
+            .: {}
+            f:env:
+              .: {}
+              k:{"name":"APP_COLOR"}:
+                .: {}
+                f:name: {}
+                f:value: {}
+            f:image: {}
+            f:imagePullPolicy: {}
+            f:name: {}
+            f:resources: {}
+            f:terminationMessagePath: {}
+            f:terminationMessagePolicy: {}
+        f:dnsPolicy: {}
+        f:enableServiceLinks: {}
+        f:restartPolicy: {}
+        f:schedulerName: {}
+        f:securityContext: {}
+        f:terminationGracePeriodSeconds: {}
+    manager: python-requests
+    operation: Update
+    time: "2021-01-15T06:52:49Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:status:
+        f:conditions:
+          k:{"type":"ContainersReady"}:
+            .: {}
+            f:lastProbeTime: {}
+            f:lastTransitionTime: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Initialized"}:
+            .: {}
+            f:lastProbeTime: {}
+            f:lastTransitionTime: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Ready"}:
+            .: {}
+            f:lastProbeTime: {}
+            f:lastTransitionTime: {}
+            f:status: {}
+            f:type: {}
+        f:containerStatuses: {}
+        f:hostIP: {}
+        f:phase: {}
+        f:podIP: {}
+        f:podIPs:
+          .: {}
+          k:{"ip":"10.244.1.3"}:
+            .: {}
+            f:ip: {}
+        f:startTime: {}
+    manager: kubelet
+    operation: Update
+    time: "2021-01-15T06:52:55Z"
+  name: webapp-color
+  namespace: default
+  resourceVersion: "3648"
+  selfLink: /api/v1/namespaces/default/pods/webapp-color
+  uid: 788d6bb0-430f-47f7-8c9f-f385b20d3954
+spec:
+  containers:
+  - env:
+    - name: APP_COLOR
+      value: green
+    image: kodekloud/webapp-color
+    imagePullPolicy: Always
+    name: webapp-color
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: default-token-wmzb4
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: node01
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: default-token-wmzb4
+    secret:
+      defaultMode: 420
+      secretName: default-token-wmzb4
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2021-01-15T06:52:49Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2021-01-15T06:52:55Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2021-01-15T06:52:55Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2021-01-15T06:52:49Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://9a98694c021120f68ad64f3866d5024db1bc47e33e58bf26bd08b0a13cb62834
+    image: kodekloud/webapp-color:latest
+    imageID: docker-pullable://kodekloud/webapp-color@sha256:99c3821ea49b89c7a22d3eebab5c2e1ec651452e7675af243485034a72eb1423
+    lastState: {}
+    name: webapp-color
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2021-01-15T06:52:55Z"
+  hostIP: 172.17.0.65
+  phase: Running
+  podIP: 10.244.1.3
+  podIPs:
+  - ip: 10.244.1.3
+  qosClass: BestEffort
+  startTime: "2021-01-15T06:52:49Z"
+controlplane $ kubectl get cm
+NAME        DATA   AGE
+db-config   3      23s
+controlplane $ kubectl describe cm db-config
+Name:         db-config
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+
+Data
+====
+DB_HOST:
+----
+SQL01.example.com
+DB_NAME:
+----
+SQL01
+DB_PORT:
+----
+3306
+Events:  <none>
+controlplane $ kubectl create cm webapp-config-map --from-literal=APP_COLOR=darkblue
+configmap/webapp-config-map created
+controlplane $ kubectl delete pod webapp-color
+pod "webapp-color" deleted
+controlplane $ kubectl explain pod | grep envFrom A3
+grep: A3: No such file or directory
+controlplane $ kubectl explain pod | grep envFrom -A3
+controlplane $ kubectl explain pod --recursive | grep envFrom -A3
+         envFrom        <[]Object>
+            configMapRef        <Object>
+               name     <string>
+               optional <boolean>
+--
+         envFrom        <[]Object>
+            configMapRef        <Object>
+               name     <string>
+               optional <boolean>
+--
+         envFrom        <[]Object>
+            configMapRef        <Object>
+               name     <string>
+               optional <boolean>
+controlplane $ ls
+5.yaml  go
+controlplane $ vi 5.yaml
+controlplane $ vi 5.yaml
+controlplane $ kubectl apply -f 5.yaml
+error: error validating "5.yaml": error validating data: ValidationError(Pod.spec.containers[0].envFrom[0]): unknown field "name" in io.k8s.api.core.v1.EnvFromSource; if you choose to ignore these errors, turn validation off with--validate=false
+controlplane $ kubectl apply -f 5.yaml --validate=false
+The Pod "webapp-color" is invalid: spec.containers[0].envFrom: Invalid value: "": must specify one of: `configMapRef` or `secretRef`
+controlplane $ kubectl apply -f 5.yaml
+error: error validating "5.yaml": error validating data: ValidationError(Pod.spec.containers[0].envFrom[0]): unknown field "name" in io.k8s.api.core.v1.EnvFromSource; if you choose to ignore these errors, turn validation off with--validate=false
+controlplane $ vi 5.yaml
+controlplane $
