@@ -1,0 +1,25 @@
+
+kubectl config use-context k8s
+
+kubectl logs poo | grep error-message > ./poo 
+
+kubectl get pv --all-namespaces --sort-by=.metadata.name > ./pvname
+
+kubectl get svc -n namespace-01 service-nm -o wide
+kubectl get pods -l ns=pod -n namespace-01
+vi pod-namelist.txt
+
+
+kubectl create deployment deploy-01 --image=nginx:1.14.2 --replicas=3
+kubectl set image deployment/deploy-01 nginx=nginx:1.6.1 --record
+kubectl rollout status deployment.v1.apps/nginx-deployment
+
+kubectl rollout undo deployment.v1.apps/deploy-01
+
+
+kubectl describe nodes | grep Taints
+
+kubectl top pods -1 cpu=high
+
+
+ETCDCTL_API=3 etcdctl --help
