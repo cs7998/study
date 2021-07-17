@@ -1,0 +1,139 @@
+controlplane $
+controlplane $
+controlplane $ kubectl get nodes
+NAME           STATUS   ROLES    AGE     VERSION
+controlplane   Ready    master   2m45s   v1.18.0node01         Ready    <none>   2m15s   v1.18.0
+controlplane $ ifconfig -a
+cni0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.244.0.1  netmask 255.255.255.0  broadcast 0.0.0.0
+        inet6 fe80::64b5:3eff:fea8:6df8  prefixlen 64  scopeid 0x20<link>
+        ether 66:b5:3e:a8:6d:f8  txqueuelen 1000  (Ethernet)
+        RX packets 937  bytes 65224 (65.2 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 992  bytes 425966 (425.9 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 172.18.0.1  netmask 255.255.255.0  broadcast 172.18.0.255
+        ether 02:42:f6:dd:8f:95  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ens3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.38  netmask 255.255.0.0  broadcast 172.17.255.255
+        inet6 fe80::42:acff:fe11:26  prefixlen 64  scopeid 0x20<link>
+        ether 02:42:ac:11:00:26  txqueuelen 1000  (Ethernet)
+        RX packets 32308  bytes 42753630 (42.7 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 9643  bytes 5107155 (5.1 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 63828  bytes 21294995 (21.2 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 63828  bytes 21294995 (21.2 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+veth0dbe4b7b: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet6 fe80::6845:27ff:fe6a:fb4a  prefixlen 64  scopeid 0x20<link>
+        ether 6a:45:27:6a:fb:4a  txqueuelen 0  (Ethernet)
+        RX packets 468  bytes 39145 (39.1 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 516  bytes 214457 (214.4 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+vethc7740b89: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet6 fe80::4dc:5fff:fef4:b85e  prefixlen 64  scopeid 0x20<link>
+        ether 06:dc:5f:f4:b8:5e  txqueuelen 0  (Ethernet)
+        RX packets 469  bytes 39197 (39.1 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 516  bytes 214401 (214.4 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+controlplane $ cat /etc/network/interfaces
+# ifupdown has been replaced by netplan(5) on this system.  See
+# /etc/netplan for current configuration.
+# To re-enable ifupdown on this system, you can run:
+#    sudo apt install ifupdown
+auto lo
+iface lo inet loopback
+
+auto ens3
+allow-hotplug ens3
+iface ens3 inet dhcp
+controlplane $ ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: ens3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether 02:42:ac:11:00:26 brd ff:ff:ff:ff:ff:ff
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN mode DEFAULT group default
+    link/ether 02:42:f6:dd:8f:95 brd ff:ff:ff:ff:ff:ff
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 66:b5:3e:a8:6d:f8 brd ff:ff:ff:ff:ff:ff
+5: vethc7740b89@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP mode DEFAULT group default
+    link/ether 06:dc:5f:f4:b8:5e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+6: veth0dbe4b7b@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP mode DEFAULT group default
+    link/ether 6a:45:27:6a:fb:4a brd ff:ff:ff:ff:ff:ff link-netnsid 1
+controlplane $ ifoncfig ens3
+ifoncfig: command not found
+controlplane $ ifconfig ens3
+ens3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.38  netmask 255.255.0.0  broadcast 172.17.255.255
+        inet6 fe80::42:acff:fe11:26  prefixlen 64  scopeid 0x20<link>
+        ether 02:42:ac:11:00:26  txqueuelen 1000  (Ethernet)
+        RX packets 33636  bytes 42901402 (42.9 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 11163  bytes 6233611 (6.2 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+controlplane $ ssh node01 ifconfig ens3
+Warning: Permanently added 'node01,172.17.0.41' (ECDSA) to the list of known hosts.
+ens3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.41  netmask 255.255.0.0  broadcast 172.17.255.255
+        inet6 fe80::42:acff:fe11:29  prefixlen 64  scopeid 0x20<link>
+        ether 02:42:ac:11:00:29  txqueuelen 1000  (Ethernet)
+        RX packets 88749  bytes 124062439 (124.0 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 24548  bytes 2449819 (2.4 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+controlplane $ ip link docker0
+Command "docker0" is unknown, try "ip link help".
+controlplane $ ssh node01 ip link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: ens3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether 02:42:ac:11:00:29 brd ff:ff:ff:ff:ff:ff
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN mode DEFAULT group default
+    link/ether 02:42:bb:48:65:2c brd ff:ff:ff:ff:ff:ff
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 0a:e1:ce:7c:31:a3 brd ff:ff:ff:ff:ff:ff
+5: veth38689966@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP mode DEFAULT group default
+    link/ether ca:e5:75:47:68:70 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+controlplane $ ip r
+default via 172.17.0.1 dev ens3
+10.244.0.0/24 dev cni0 proto kernel scope link src 10.244.0.1
+10.244.1.0/24 via 172.17.0.41 dev ens3
+172.17.0.0/16 dev ens3 proto kernel scope link src 172.17.0.38
+172.18.0.0/24 dev docker0 proto kernel scope link src 172.18.0.1 linkdown
+controlplane $ netstat -natulp | grep kube-scheduler
+tcp        0      0 127.0.0.1:10259         0.0.0.0:*               LISTEN      2321/kube-scheduler
+tcp        0      0 172.17.0.38:50352       172.17.0.38:6443        ESTABLISHED 2321/kube-scheduler
+tcp        0      0 172.17.0.38:50130       172.17.0.38:6443        ESTABLISHED 2321/kube-scheduler
+tcp6       0      0 :::10251                :::*                    LISTEN      2321/kube-scheduler
+controlplane $ netstat -natulp | grep etcd | grep LISTEN
+tcp        0      0 172.17.0.38:2379        0.0.0.0:*               LISTEN      2459/etcd
+tcp        0      0 127.0.0.1:2379          0.0.0.0:*               LISTEN      2459/etcd
+tcp        0      0 172.17.0.38:2380        0.0.0.0:*               LISTEN      2459/etcd
+tcp        0      0 127.0.0.1:2381          0.0.0.0:*               LISTEN      2459/etcd
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.
+
+The environment has expired.
+
+Please refresh to get a new environment.

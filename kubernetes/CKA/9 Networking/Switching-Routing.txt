@@ -1,0 +1,42 @@
+ip link
+
+ip addr
+
+ip addr add 192.168.1.10/24 dev eth0
+
+ip link, ip addr 명령어는 일시적 재부팅하면 날아감
+/etc/network/interfaces 에 저장해야 영구적으로 적용
+
+route
+ip route add 192.168.2.0/24 via 192.168.1.1
+192.168.1.1(192.168.2.1 도 가지고있는 router) 을 통해서
+패킷 보냄 192.168.1.xxx 에서 192.168.2.xxx 로 가는 패킷 보냄
+
+ip route add 192.168.1.0/24 via 192.168.2.1
+192.168.2.1(192.168.1.1 도 가지고있는 router) 을 통해서
+패킷 보냄 192.168.2.xxx 에서 192.168.1.xxx 로 가는 패킷 보냄
+
+
+IP Forward
+https://zigispace.net/903
+cat /proc/sys/net/ipv4/ip_forward
+0
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+/etc/sysctl.conf
+
+
+/etc/hosts
+https://storycompiler.tistory.com/118
+
+/etc/resolv.conf
+nameserver 
+
+linux network setting
+http://blog.naver.com/PostView.nhn?blogId=minki0127&logNo=220820508210&categoryNo=0&parentCategoryNo=0&viewDate=&currentPage=1&postListTopCurrentPage=1&from=postView
+
+https://wani.kr/posts/2017/03/22/ubuntu-resolvconf-settings-summary/
+
+nslookup
+dig

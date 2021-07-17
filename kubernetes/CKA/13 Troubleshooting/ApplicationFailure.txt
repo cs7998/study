@@ -1,0 +1,934 @@
+controlplane $
+controlplane $
+controlplane $ kubectl -n alpha get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          2m23s
+pod/webapp-mysql-75dfdf859f-f4gkm   1/1     Running   0          2m23s
+NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/mysql         ClusterIP   10.109.208.69   <none>        3306/TCP         2m23s
+service/web-service   NodePort    10.98.121.240   <none>        8080:30081/TCP   2m23s
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGEdeployment.apps/webapp-mysql   1/1     1            1           2m23s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-75dfdf859f   1         1         1       2m23s
+controlplane $ kubectl -n alpha get svc mysql -o yaml > mysql-svc.yaml
+controlplane $ kubectl -n alpha delete svc mysql
+service "mysql" deleted
+controlplane $ vi mysql-svc.yaml
+controlplane $ cat mysql-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2021-01-26T08:22:43Z"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":3306,"protocol":"TCP"}:
+            .: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:name: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: python-requests
+    operation: Update
+    time: "2021-01-26T08:22:43Z"
+  name: mysql-service
+  namespace: alpha
+  resourceVersion: "657"
+  selfLink: /api/v1/namespaces/alpha/services/mysql
+  uid: 6b031e5d-ee25-418a-b64f-81b5a9d3cdd7
+spec:
+  clusterIP: 10.109.208.69
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    name: mysql
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+controlplane $ kubectl create -f mysql-svc.yaml
+service/mysql-service created
+controlplane $ kubectl -n alpha get a
+error: the server doesn't have a resource type "a"
+controlplane $ kubectl -n alpha get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          5m46s
+pod/webapp-mysql-75dfdf859f-f4gkm   1/1     Running   0          5m46s
+
+NAME                    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.109.208.69   <none>        3306/TCP         16s
+service/web-service     NodePort    10.98.121.240   <none>        8080:30081/TCP   5m46s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           5m46s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-75dfdf859f   1         1         1       5m46s
+controlplane $ 2
+bash: 2: command not found
+controlplane $ kubectl -n beta get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          24s
+pod/webapp-mysql-75dfdf859f-wtz58   1/1     Running   0          24s
+
+NAME                    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.97.118.153   <none>        3306/TCP         24s
+service/web-service     NodePort    10.111.27.100   <none>        8080:30081/TCP   24s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           24s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-75dfdf859f   1         1         1       24s
+controlplane $ kubectl -n beta get svc
+NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+mysql-service   ClusterIP   10.97.118.153   <none>        3306/TCP         56s
+web-service     NodePort    10.111.27.100   <none>        8080:30081/TCP   56s
+controlplane $ kubectl describe svc mysql-service -n beta
+Name:              mysql-service
+Namespace:         beta
+Labels:            <none>
+Annotations:       <none>
+Selector:          name=mysql
+Type:              ClusterIP
+IP:                10.97.118.153
+Port:              <unset>  3306/TCP
+TargetPort:        8080/TCP
+Endpoints:         10.244.1.5:8080
+Session Affinity:  None
+Events:            <none>
+controlplane $ kubectl -n beta get svc mysql-service -o yaml > mysql-svc.yaml
+controlplane $ vi mysql-svc.yaml
+controlplane $ kubectl -n beta delete svc mysql-service
+service "mysql-service" deleted
+controlplane $ kubectl apply -f mysql-svc.yaml
+service/mysql-service created
+controlplane $  kubectl -n gamma get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          28s
+pod/webapp-mysql-75dfdf859f-nw995   1/1     Running   0          28s
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.105.233.213   <none>        3306/TCP         28s
+service/web-service     NodePort    10.100.109.223   <none>        8080:30081/TCP   28s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           28s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-75dfdf859f   1         1         1       28s
+controlplane $ kubectl -n gamma get ep
+NAME            ENDPOINTS         AGE
+mysql-service   <none>            60s
+web-service     10.244.1.8:8080   60s
+controlplane $ kubectl get svc mysql-service -n gamma -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2021-01-26T08:48:25Z"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:ports:
+          .: {}
+          k:{"port":3306,"protocol":"TCP"}:
+            .: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:name: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: python-requests
+    operation: Update
+    time: "2021-01-26T08:48:25Z"
+  name: mysql-service
+  namespace: gamma
+  resourceVersion: "4442"
+  selfLink: /api/v1/namespaces/gamma/services/mysql-service
+  uid: cb2e119d-3ffa-4023-ab66-8e4401d04104
+spec:
+  clusterIP: 10.105.233.213
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    name: sql00001
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+controlplane $ kubectl -n gamma describe pod mysql
+Name:         mysql
+Namespace:    gamma
+Priority:     0
+Node:         node01/172.17.0.22
+Start Time:   Tue, 26 Jan 2021 08:48:25 +0000
+Labels:       name=mysql
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.7
+IPs:
+  IP:  10.244.1.7
+Containers:
+  mysql:
+    Container ID:   docker://af7ba7754dd08136c27e3c1fe2301e24104a12da1f5b3c15e3bb4c51075961c6
+    Image:          mysql:5.6
+    Image ID:       docker-pullable://mysql@sha256:8875725ff152f77e47a563661ea010b4ca9cea42d9dda897fb565ca224e83de2
+    Port:           3306/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 26 Jan 2021 08:48:27 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      MYSQL_ROOT_PASSWORD:  paswrd
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-7jcx4 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-7jcx4:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-7jcx4
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  3m2s  default-scheduler  Successfully assigned gamma/mysql to node01
+  Normal  Pulled     3m1s  kubelet, node01    Container image "mysql:5.6" already present on machine
+  Normal  Created    3m1s  kubelet, node01    Created container mysql
+  Normal  Started    3m    kubelet, node01    Started container mysql
+controlplane $ kubectl -n gamma delete svc mysql-service
+service "mysql-service" deleted
+controlplane $ kubectl -n gamma expose pod mysql --name=mysql-service.yaml
+The Service "mysql-service.yaml" is invalid: metadata.name: Invalid value: "mysql-service.yaml": a DNS-1035 label must consist of lower case alphanumeric characters or '-', start with an alphabetic character, and end with an alphanumeric character (e.g. 'my-name',  or 'abc-123', regex used for validation is '[a-z]([-a-z0-9]*[a-z0-9])?')
+controlplane $ ls
+CKA  go  mysql-svc.yaml
+controlplane $ kubectl -n gamma expose pod mysql --name=mysql-svc.yaml
+The Service "mysql-svc.yaml" is invalid: metadata.name: Invalid value: "mysql-svc.yaml": a DNS-1035 label must consist of lower case alphanumeric characters or '-', start with an alphabetic character, and end with an alphanumericcharacter (e.g. 'my-name',  or 'abc-123', regex used for validation is '[a-z]([-a-z0-9]*[a-z0-9])?')
+controlplane $ kubectl -n gamma expose pod mysql --name=mysql-service
+service/mysql-service exposed
+controlplane $ kubectl -n gamma get ep
+NAME            ENDPOINTS         AGE
+mysql-service   10.244.1.7:3306   21s
+web-service     10.244.1.8:8080   6m4s
+controlplane $
+controlplane $ kubectl -n delta get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          38s
+pod/webapp-mysql-67cfc57cbc-8jnrd   1/1     Running   0          38s
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.111.203.255   <none>        3306/TCP         38s
+service/web-service     NodePort    10.99.84.192     <none>        8080:30081/TCP   38s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           38s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-67cfc57cbc   1         1         1       38s
+controlplane $ kubectl -n delta describe pod mysql
+Name:         mysql
+Namespace:    delta
+Priority:     0
+Node:         node01/172.17.0.22
+Start Time:   Tue, 26 Jan 2021 08:55:26 +0000
+Labels:       name=mysql
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.9
+IPs:
+  IP:  10.244.1.9
+Containers:
+  mysql:
+    Container ID:   docker://9ce92acd55cb51e8bb6df9c15573dad4c8776bf753f614f092cc3a6e6a259056
+    Image:          mysql:5.6
+    Image ID:       docker-pullable://mysql@sha256:8875725ff152f77e47a563661ea010b4ca9cea42d9dda897fb565ca224e83de2
+    Port:           3306/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 26 Jan 2021 08:55:27 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      MYSQL_ROOT_PASSWORD:  paswrd
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-trf5j (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-trf5j:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-trf5j
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  70s   default-scheduler  Successfully assigned delta/mysql to node01
+  Normal  Pulled     69s   kubelet, node01    Container image "mysql:5.6" already present on machine
+  Normal  Created    69s   kubelet, node01    Created container mysql
+  Normal  Started    69s   kubelet, node01    Started container mysql
+controlplane $ kubectl -n delta describe deployments. webapp-mysql
+Name:                   webapp-mysql
+Namespace:              delta
+CreationTimestamp:      Tue, 26 Jan 2021 08:55:26 +0000
+Labels:                 name=webapp-mysql
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               name=webapp-mysql
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  name=webapp-mysql
+  Containers:
+   webapp-mysql:
+    Image:      mmumshad/simple-webapp-mysql
+    Port:       8080/TCP
+    Host Port:  0/TCP
+    Environment:
+      DB_Host:      mysql-service
+      DB_User:      sql-user
+      DB_Password:  paswrd
+    Mounts:         <none>
+  Volumes:          <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   webapp-mysql-67cfc57cbc (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  2m12s  deployment-controller  Scaled up replica set webapp-mysql-67cfc57cbc to 1
+controlplane $ kubectl -n delta get deployments.webapp-mysql -o yaml > web.yaml
+error: the server doesn't have a resource type "deployments"
+controlplane $ kubectl -n delta get deployments. webapp-mysql -o yaml > web.yaml
+controlplane $ vi web.yaml
+controlplane $ kubectl delete deployments. webapp-mysql -n delta
+deployment.apps "webapp-mysql" deleted
+controlplane $ kubectl create -f web.yaml
+deployment.apps/webapp-mysql created
+controlplane $ kubectl -n delta get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          7m40s
+pod/webapp-mysql-75dfdf859f-bdb22   1/1     Running   0          20s
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.111.203.255   <none>        3306/TCP         7m40s
+service/web-service     NodePort    10.99.84.192     <none>        8080:30081/TCP   7m40s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           20s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-75dfdf859f   1         1         1       20s
+controlplane $
+controlplane $
+controlplane $
+controlplane $ kubectl -n epsilon get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          89s
+pod/webapp-mysql-67cfc57cbc-472tr   1/1     Running   0          89s
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.110.101.189   <none>        3306/TCP         89sservice/web-service     NodePort    10.100.135.202   <none>        8080:30081/TCP   88s
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGEdeployment.apps/webapp-mysql   1/1     1            1           89s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-67cfc57cbc   1         1         1       89s
+controlplane $ kubectl -n epsilon get deployments.apps webapp-mysql -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"  creationTimestamp: "2021-01-26T09:32:43Z"
+  generation: 1
+  labels:
+    name: webapp-mysql
+  managedFields:
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .: {}
+          f:name: {}
+      f:spec:
+        f:progressDeadlineSeconds: {}
+        f:replicas: {}
+        f:revisionHistoryLimit: {}
+        f:selector:
+          f:matchLabels:
+            .: {}
+            f:name: {}
+        f:strategy:
+          f:rollingUpdate:
+            .: {}
+            f:maxSurge: {}
+            f:maxUnavailable: {}
+          f:type: {}
+        f:template:
+          f:metadata:
+            f:labels:
+              .: {}
+              f:name: {}
+            f:name: {}
+          f:spec:
+            f:containers:
+              k:{"name":"webapp-mysql"}:
+                .: {}
+                f:env:
+                  .: {}
+                  k:{"name":"DB_Host"}:
+                    .: {}
+                    f:name: {}
+                    f:value: {}
+                  k:{"name":"DB_Password"}:
+                    .: {}
+                    f:name: {}
+                    f:value: {}
+                  k:{"name":"DB_User"}:
+                    .: {}
+                    f:name: {}
+                    f:value: {}
+                f:image: {}
+                f:imagePullPolicy: {}
+                f:name: {}
+                f:ports:
+                  .: {}
+                  k:{"containerPort":8080,"protocol":"TCP"}:
+                    .: {}
+                    f:containerPort: {}
+                    f:protocol: {}
+                f:resources: {}
+                f:terminationMessagePath: {}
+                f:terminationMessagePolicy: {}
+            f:dnsPolicy: {}
+            f:restartPolicy: {}
+            f:schedulerName: {}
+            f:securityContext: {}
+            f:terminationGracePeriodSeconds: {}
+    manager: python-requests
+    operation: Update
+    time: "2021-01-26T09:32:43Z"
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:deployment.kubernetes.io/revision: {}
+      f:status:
+        f:availableReplicas: {}
+        f:conditions:
+          .: {}
+          k:{"type":"Available"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Progressing"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+        f:observedGeneration: {}
+        f:readyReplicas: {}
+        f:replicas: {}
+        f:updatedReplicas: {}
+    manager: kube-controller-manager
+    operation: Update
+    time: "2021-01-26T09:32:47Z"
+  name: webapp-mysql
+  namespace: epsilon
+  resourceVersion: "2150"
+  selfLink: /apis/apps/v1/namespaces/epsilon/deployments/webapp-mysql
+  uid: a1f2d66d-be10-4a6f-a96e-5c9e9e539554
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: webapp-mysql
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: webapp-mysql
+      name: webapp-mysql
+    spec:
+      containers:
+      - env:
+        - name: DB_Host
+          value: mysql-service
+        - name: DB_User
+          value: sql-user
+        - name: DB_Password
+          value: paswrd
+        image: mmumshad/simple-webapp-mysql
+        imagePullPolicy: Always
+        name: webapp-mysql
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2021-01-26T09:32:47Z"
+    lastUpdateTime: "2021-01-26T09:32:47Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2021-01-26T09:32:43Z"
+    lastUpdateTime: "2021-01-26T09:32:47Z"
+    message: ReplicaSet "webapp-mysql-67cfc57cbc" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
+controlplane $ kubectl -n epsilon get deployments.apps webapp-mysql -o yaml > web.yaml
+controlplane $ vi web.yaml
+controlplane $ cat web.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2021-01-26T09:32:43Z"
+  generation: 1
+  labels:
+    name: webapp-mysql
+  managedFields:
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .: {}
+          f:name: {}
+      f:spec:
+        f:progressDeadlineSeconds: {}
+        f:replicas: {}
+        f:revisionHistoryLimit: {}
+        f:selector:
+          f:matchLabels:
+            .: {}
+            f:name: {}
+        f:strategy:
+          f:rollingUpdate:
+            .: {}
+            f:maxSurge: {}
+            f:maxUnavailable: {}
+          f:type: {}
+        f:template:
+          f:metadata:
+            f:labels:
+              .: {}
+              f:name: {}
+            f:name: {}
+          f:spec:
+            f:containers:
+              k:{"name":"webapp-mysql"}:
+                .: {}
+                f:env:
+                  .: {}
+                  k:{"name":"DB_Host"}:
+                    .: {}
+                    f:name: {}
+                    f:value: {}
+                  k:{"name":"DB_Password"}:
+                    .: {}
+                    f:name: {}
+                    f:value: {}
+                  k:{"name":"DB_User"}:
+                    .: {}
+                    f:name: {}
+                    f:value: {}
+                f:image: {}
+                f:imagePullPolicy: {}
+                f:name: {}
+                f:ports:
+                  .: {}
+                  k:{"containerPort":8080,"protocol":"TCP"}:
+                    .: {}
+                    f:containerPort: {}
+                    f:protocol: {}
+                f:resources: {}
+                f:terminationMessagePath: {}
+                f:terminationMessagePolicy: {}
+            f:dnsPolicy: {}
+            f:restartPolicy: {}
+            f:schedulerName: {}
+            f:securityContext: {}
+            f:terminationGracePeriodSeconds: {}
+    manager: python-requests
+    operation: Update
+    time: "2021-01-26T09:32:43Z"
+  - apiVersion: apps/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:deployment.kubernetes.io/revision: {}
+      f:status:
+        f:availableReplicas: {}
+        f:conditions:
+          .: {}
+          k:{"type":"Available"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+          k:{"type":"Progressing"}:
+            .: {}
+            f:lastTransitionTime: {}
+            f:lastUpdateTime: {}
+            f:message: {}
+            f:reason: {}
+            f:status: {}
+            f:type: {}
+        f:observedGeneration: {}
+        f:readyReplicas: {}
+        f:replicas: {}
+        f:updatedReplicas: {}
+    manager: kube-controller-manager
+    operation: Update
+    time: "2021-01-26T09:32:47Z"
+  name: webapp-mysql
+  namespace: epsilon
+  resourceVersion: "2150"
+  selfLink: /apis/apps/v1/namespaces/epsilon/deployments/webapp-mysql
+  uid: a1f2d66d-be10-4a6f-a96e-5c9e9e539554
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: webapp-mysql
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: webapp-mysql
+      name: webapp-mysql
+    spec:
+      containers:
+      - env:
+        - name: DB_Host
+          value: mysql-service
+        - name: DB_User
+          value: root
+        - name: DB_Password
+          value: paswrd
+        image: mmumshad/simple-webapp-mysql
+        imagePullPolicy: Always
+        name: webapp-mysql
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2021-01-26T09:32:47Z"
+    lastUpdateTime: "2021-01-26T09:32:47Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2021-01-26T09:32:43Z"
+    lastUpdateTime: "2021-01-26T09:32:47Z"
+    message: ReplicaSet "webapp-mysql-67cfc57cbc" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
+controlplane $ kubectl -n epsilon delete deployments.apps webapp-mysql
+deployment.apps "webapp-mysql" deleted
+controlplane $ kubectl create -f web.yaml
+deployment.apps/webapp-mysql created
+controlplane $ kubectl -n epsilon get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          6m18s
+pod/webapp-mysql-75dfdf859f-2dc4r   1/1     Running   0          79s
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.110.101.189   <none>        3306/TCP         6m18s
+service/web-service     NodePort    10.100.135.202   <none>        8080:30081/TCP   6m17s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           79s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-75dfdf859f   1         1         1       79s
+controlplane $ kubectl describe mysql -n epsilon
+error: the server doesn't have a resource type "mysql"
+controlplane $ kubectl describe pod mysql -n epsilon
+Name:         mysql
+Namespace:    epsilon
+Priority:     0
+Node:         node01/172.17.0.75
+Start Time:   Tue, 26 Jan 2021 09:32:43 +0000
+Labels:       name=mysql
+Annotations:  <none>
+Status:       Running
+IP:           10.244.1.10
+IPs:
+  IP:  10.244.1.10
+Containers:
+  mysql:
+    Container ID:   docker://d2a336c28966961e1f7f6f0aeb687680cf920487a62db275330fc1a6a1ee3fb5
+    Image:          mysql:5.6
+    Image ID:       docker-pullable://mysql@sha256:8875725ff152f77e47a563661ea010b4ca9cea42d9dda897fb565ca224e83de2
+    Port:           3306/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 26 Jan 2021 09:32:45 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      MYSQL_ROOT_PASSWORD:  passwooooorrddd
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-ds5l8 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-ds5l8:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-ds5l8
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  7m23s  default-scheduler  Successfully assigned epsilon/mysql to node01
+  Normal  Pulled     7m22s  kubelet, node01    Container image "mysql:5.6" already present on machine
+  Normal  Created    7m21s  kubelet, node01    Created container mysql
+  Normal  Started    7m21s  kubelet, node01    Started container mysql
+controlplane $ kubectl describe pod mysql -n epsilon -o yaml > mysql.yaml
+Error: unknown shorthand flag: 'o' in -o
+See 'kubectl describe --help' for usage.
+controlplane $ kubectl describe pod mysql -n epsilon -o yaml > mysql.yaml
+Error: unknown shorthand flag: 'o' in -o
+See 'kubectl describe --help' for usage.
+controlplane $ kubectl describe pod mysql -n epsilon -o
+Error: unknown shorthand flag: 'o' in -o
+See 'kubectl describe --help' for usage.
+controlplane $ kubectl describe pod mysql -n epsilon -o yaml > mysql.yaml
+Error: unknown shorthand flag: 'o' in -o
+See 'kubectl describe --help' for usage.
+controlplane $ kubectl edit pod mysql -n epsilon
+error: pods "mysql" is invalid
+A copy of your changes has been stored to "/tmp/kubectl-edit-m1mwe.yaml"
+error: Edit cancelled, no valid changes were saved.
+controlplane $ kubectl get pod mysql -n epsilon -o yaml > mysql.yaml
+controlplane $ kubectl delete pod msql -n epsilon
+Error from server (NotFound): pods "msql" not found
+controlplane $ kubectl delete pod mysql -n epsilon
+pod "mysql" deleted
+controlplane $ vi mysql.yaml
+controlplane $ kubectl create -f mysql.yaml
+pod/mysql created
+controlplane $ kubectl -n epsilon get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          30s
+pod/webapp-mysql-75dfdf859f-2dc4r   1/1     Running   0          14m
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.110.101.189   <none>        3306/TCP         19m
+service/web-service     NodePort    10.100.135.202   <none>        8080:30081/TCP   19m
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           14m
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-75dfdf859f   1         1         1       14m
+controlplane $ 6
+bash: 6: command not found
+controlplane $ kubectl -n zeta get svc web-service
+NAME          TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+web-service   NodePort   10.96.156.71   <none>        8080:30088/TCP   3m40s
+controlplane $ kubectl get svc web-service -n zeta -o yaml > web-service.yaml
+controlplane $ vi web
+web-service.yaml  web.yaml
+controlplane $ vi web-service.yaml
+controlplane $ cat web-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2021-01-26T09:53:50Z"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:externalTrafficPolicy: {}
+        f:ports:
+          .: {}
+          k:{"port":8080,"protocol":"TCP"}:
+            .: {}
+            f:nodePort: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector:
+          .: {}
+          f:name: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: python-requests
+    operation: Update
+    time: "2021-01-26T09:53:49Z"
+  name: web-service
+  namespace: zeta
+  resourceVersion: "5140"
+  selfLink: /api/v1/namespaces/zeta/services/web-service
+  uid: ef772b20-a3e5-479c-ac70-809e4c1f7caf
+spec:
+  clusterIP: 10.96.156.71
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 30081
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    name: webapp-mysql
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
+controlplane $ kubectl -n zeta delete svc web-service
+service "web-service" deleted
+controlplane $ kubectl create -f web-service.yaml
+service/web-service created
+controlplane $ kubectl -n zeta get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          5m38s
+pod/webapp-mysql-67cfc57cbc-88rjm   1/1     Running   0          5m38s
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.101.250.213   <none>        3306/TCP         5m38s
+service/web-service     NodePort    10.96.156.71     <none>        8080:30081/TCP   15s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           5m38s
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-67cfc57cbc   1         1         1       5m38s
+controlplane $ kubetl -n zeta get pod mysql -o yaml > mysql.yaml
+bash: kubetl: command not found
+controlplane $ kubectl -n zeta get pod mysql -o yaml > mysql.yaml
+controlplane $ kubectl -n zeta get deployments.apps webapp-mysql -o yaml > web.yaml
+controlplane $ vi web.yaml
+controlplane $ kubectl -n zeta delete deployments.apps webapp-mysql
+deployment.apps "webapp-mysql" deleted
+controlplane $ kubectl create -f web.yaml
+deployment.apps/webapp-mysql created
+controlplane $ vi mysql.yaml
+controlplane $ kubectl -n zeta delete pod mysql
+pod "mysql" deleted
+controlplane $ kubectl create -f mysql.yaml
+pod/mysql created
+controlplane $ kubectl -n zeta get all
+NAME                                READY   STATUS    RESTARTS   AGE
+pod/mysql                           1/1     Running   0          18s
+pod/webapp-mysql-75dfdf859f-98gzg   1/1     Running   0          2m
+
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/mysql-service   ClusterIP   10.101.250.213   <none>        3306/TCP         10m
+service/web-service     NodePort    10.96.156.71     <none>        8080:30081/TCP   5m25s
+
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/webapp-mysql   1/1     1            1           2m
+
+NAME                                      DESIRED   CURRENT   READY   AGE
+replicaset.apps/webapp-mysql-75dfdf859f   1         1         1       2m
+controlplane $ Connection to host01 closed by remote host.
+Connection to host01 closed.

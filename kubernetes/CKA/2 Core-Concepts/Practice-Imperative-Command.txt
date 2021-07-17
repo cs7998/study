@@ -56,6 +56,7 @@ service/redis created
 controlplane $ kubectl delete svc redis
 service "redis" deleted
 controlplane $ kubectl expose pod redis --port=6379 --name=redis-service
+
 service/redis-service exposed
 controlplane $ kubectl create deploy webapp --image=kodekloud/webapp-color --replicas=3
 deployment.apps/webapp created
